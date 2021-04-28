@@ -20,3 +20,4 @@ SHOW ERRORS #显示服务器错误
 SHOW WARNINGS #显示服务器警告信息
 ```
 # 第四章 检索数据
+## SELECT语句
