@@ -6,11 +6,17 @@
 * 用户口令（如果需要）
 ## 选择数据库
 ```sql
-use database #database是要使用的数据库名
+USE DATABASE #DATABASE是要使用的数据库名
 ```
 ## 了解数据库与表
 ```sql
-show databases #显示所有数据库
-show table     #显示数据库中所有表
+SHOW DATABASES #显示所有数据库
+SHOW TABLE     #显示数据库中所有表
+SHOW STATUS
+SHOW CREATE DATABASE
+SHOW CREATE TABLE
+SHOW GRANTS
+SHOW ERRORS
+SHOW WARNINGS
 ```
-##
+## 
