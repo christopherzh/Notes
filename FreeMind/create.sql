@@ -1,4 +1,4 @@
-create schema school;
+create schema school; 
 create table S(
     Sno char(9),
     Sname char(3),
