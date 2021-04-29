@@ -49,6 +49,7 @@ DROP COLUMN column1;
 ## 删除表
 ```sql
 DROP TABLE table1;
+TRUNCATE TABLE table1; #仅删除表内数据，不删除表
 ```
 ## 重命名表
 ```sql
@@ -56,7 +57,11 @@ RENAME TABLE table1 TO renamed_table1;
 ```
 
 # 插入、更新与删除数据
-
+## INSERT语句
+```sql
+INSERT INTO table1 VALUES ('data1','data2');
+INSERT INTO table1 (column1,column2) VALUES ('data1','data2');
+```
 # 检索数据 
 ## SELECT语句
 ```sql
