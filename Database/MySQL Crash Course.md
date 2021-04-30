@@ -57,7 +57,7 @@ ADD column1 char(2) [UNIQUE]; #UNIQUE代指完整性约束，可有可无
 
 #更新属性的数据类型
 ALTER TABLE table1
-ALTER COLUMN column1 varchar(5);
+MODIFY(ALTER) COLUMN column1 varchar(5);
 #删除列
 ALTER TABLE table1
 DROP COLUMN column1;
@@ -177,12 +177,14 @@ FROM <表名或视图名>[，<表名或视图名>,...]
 
 ### LIMIT子句
 ```sql
+#从行0开始
 SELECT column1 FROM table1 LIMIT 5; #检索单个列，LIMIT 5指示返回结果不多于5行
 SELECT column1 FROM table1 LIMIT 4,5; #返回结果为从行4开始的5行，即4到9行，第一个数为开始位置，第二个数为检索行数
 SELECT column1 FROM table1 LIMIT 5 OFFSET 4; #与上一条含义相同，仅是不同的写法
 ```
 
 ### TOP子句
+mysql中不支持该语法，应使用上述的LIMIT子句。
 ```sql
 SELECT TOP 2 * FROM table1; # 返回前两条记录
 SELECT TOP 50 PERCENT * FROM table1; # 返回前50%的记录
@@ -244,8 +246,34 @@ ORDER BY Company DESC, OrderNumber ASC
 ```
 
 ## 数据分组与聚合函数（GROUP BY）
+### 基本语法
+GROUP BY 语句用于结合合计函数，根据一个或多个列对结果集进行分组。
+```sql
+SELECT column_name, aggregate_function(column_name)
+FROM table_name
+WHERE column_name operator value
+GROUP BY column_name
 
+#实例，对多个列进行分组
+SELECT Customer,OrderDate,SUM(OrderPrice) FROM Orders
+GROUP BY Customer,OrderDate
+```
 
+### HAVING子句
+在SQL中增加HAVING子句原因是，WHERE关键字无法与合计函数一起使用。
+```sql
+SELECT column_name, aggregate_function(column_name)
+FROM table_name
+WHERE column_name operator value
+GROUP BY column_name
+HAVING aggregate_function(column_name) operator value
+
+#实例
+SELECT Customer,SUM(OrderPrice) FROM Orders
+WHERE Customer='Bush' OR Customer='Adams'
+GROUP BY Customer
+HAVING SUM(OrderPrice)>1500
+````
 
 ## 联接表
 

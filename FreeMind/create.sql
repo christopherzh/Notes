@@ -17,7 +17,7 @@ create table C(
 create table SC(
     Sno char(9),
     Cno char(1),
-    Grade int,
+    Grade FLOAT,
     constraint c1 check (Grade>=0 and Grade<=100),
     constraint fk_s foreign key (Sno) references S(Sno),
     constraint fk_c foreign key (Cno) references C(Cno)

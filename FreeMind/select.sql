@@ -24,6 +24,23 @@ SELECT sname FROM s WHERE NOT EXISTS
 (SELECT  * FROM c WHERE NOT EXISTS 
 (SELECT * FROM sc WHERE sc.sno=s.sno AND c.cno=sc.cno ) );
 
-SELECT sno.AVG(Grade) FROM sc WHERE ;
+SELECT sno,AVG(grade) FROM sc  WHERE cno='1' OR grade>=60 GROUP BY sc.sno ORDER BY  AVG(grade) DESC ;
 
-SELECT sname from s
+SELECT sname FROM s,sc,c
+WHERE s.sno=sc.sno AND sc.cno=c.cno AND cname='数据库'
+ORDER BY grade DESC LIMIT 1,1;
+SELECT sname FROM s,sc,c
+WHERE s.sno=sc.sno AND sc.cno=c.cno AND c.cname='数据库' AND grade<(SELECT MAX(sc.grade) FROM sc,c
+WHERE sc.cno=c.cno AND c.cname='数据库') ORDER BY grade DESC LIMIT 0,1 ;
+
+/*
+仅为练习分组
+SELECT cno,MAX(grade)  FROM sc  
+WHERE cno IN 
+(SELECT sc.cno FROM sc,c WHERE sc.cno=c.cno AND c.cname='数据库' ) 
+GROUP BY sc.cno;
+*/
+SELECT sc.sno FROM sc,s
+WHERE (SELECT);
+
+SELECT sno,COUNT(cno) FROM sc GROUP BY sno HAVING COUNT(cno)=1;
