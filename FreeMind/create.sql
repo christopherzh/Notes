@@ -1,3 +1,4 @@
+#实验一
 create schema school; 
 create table S(
     Sno char(9) UNIQUE,
@@ -20,4 +21,39 @@ create table SC(
     constraint c1 check (Grade>=0 and Grade<=100),
     constraint fk_s foreign key (Sno) references S(Sno),
     constraint fk_c foreign key (Cno) references C(Cno)
+);
+
+
+#实验二
+CREATE TABLE  account(
+    id int PRIMARY KEY AUTO_INCREMENT ,
+    customer_id int,
+    dish_id int,
+    num int,
+    price double,
+    mark int ,
+    evaluation varchar(40),
+    CONSTRAINT c_a CHECK(mark>=0 and mark<=5) 
+);
+CREATE TABLE  dishes(
+    id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(40),
+    material varchar(40),
+    type int,
+    price double,
+    photo varchar(40),
+    avemark double,
+    sales int
+);
+
+CREATE  TABLE  customer(
+    id int PRIMARY KEY AUTO_INCREMENT,
+    name varchar(40),
+    password varchar(40),
+    balance int
+);
+CREATE  TABLE  manager(
+    id int PRIMARY KEY AUTO_INCREMENT ,
+    name varchar(40),
+    password varchar(40)
 );
