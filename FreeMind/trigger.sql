@@ -5,3 +5,8 @@
 4.	在 SC 表上编写 update 触发器，当修改 SC 表中的 Grade 字段时将其修改前后的信息保存在 SC_log 表中。
 实验完成后,撤消建立的基本表和视图。
 */
+
+#1
+ALTER TABLE sc
+DROP fk_s;
+CREATE TRIGGER 

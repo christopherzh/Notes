@@ -7,15 +7,28 @@
 6.	计算每个学生有成绩的课程门数、平均成绩。
 7.	使用 GRANT 语句,把对基本表 S、SC、C 的使用权限授给其它用户。
 */
-UPDATE sc SET grade=grade+0.05*grade WHERE cno='1' AND grade IS NOT NULL 
 
+
+#1
+UPDATE sc SET grade=grade+0.05*grade WHERE cno='1' AND grade IS NOT NULL; 
+#2
 DELETE FROM sc WHERE cno IN 
-(SELECT sc.cno FROM sc,c WHERE sc.cno=c.cno AND cname='数据结构')
+(SELECT cno FROM c WHERE sc.cno=cno AND cname='数据结构');
+#3
+DELETE FROM sc WHERE sno='201215122' ;
+DELETE FROM s WHERE sno='201215122' ;
+#4
+CREATE VIEW boy (bno,bname,cname,grade) AS 
+SELECT s.sno,s.sname,c.cname,sc.Grade
+FROM s,c,sc
+WHERE s.sno=sc.sno AND c.cno=sc.cno AND ssex='男';
 
-DELETE FROM sc,c WHERE sc.sno='201215122' AND s.sno='201215122'
-
-CREATE VIEW v1(
-
-)
-
+#5
+SELECT sname FROM s 
+WHERE sno IN (
+SELECT sc.sno FROM sc,c
+WHERE sc.cno=c.cno AND c.ccredit=3 AND sc.grade>=80 
+GROUP BY sc.sno HAVING COUNT(sc.cno)>=3);
+#6
+#7
 GRANT 

@@ -10,28 +10,53 @@
 的学生的姓名。
 8.	查询选课门数唯一的学生的学号。
 */
+#1
 SELECT  Sno,Grade FROM sc WHERE Cno='2';
 
+#2
+#solution1
 SELECT sc.sno,s.sage FROM sc LEFT JOIN s ON sc.sno=s.sno 
 LEFT JOIN c ON sc.cno=c.cno WHERE  cname='数据结构';
+#solution2
 SELECT sc.sno,s.sage FROM sc LEFT JOIN s ON sc.sno=s.sno  
 WHERE cno=(SELECT cno FROM c WHERE cname='数据结构');
 
+#3
 SELECT  sno,sname FROM  s 
 WHERE NOT EXISTS(SELECT * FROM  sc WHERE s.sno=sc.sno AND cno='3');
 
+#4
 SELECT sname FROM s WHERE NOT EXISTS 
 (SELECT  * FROM c WHERE NOT EXISTS 
 (SELECT * FROM sc WHERE sc.sno=s.sno AND c.cno=sc.cno ) );
 
-SELECT sno,AVG(grade) FROM sc  WHERE cno='1' OR grade>=60 GROUP BY sc.sno ORDER BY  AVG(grade) DESC ;
+#5
+SELECT sno,AVG(grade) FROM sc  WHERE cno='1' OR grade>=60 
+GROUP BY sc.sno ORDER BY  AVG(grade) DESC ;
 
+#6
+#situation2
 SELECT sname FROM s,sc,c
 WHERE s.sno=sc.sno AND sc.cno=c.cno AND cname='数据库'
 ORDER BY grade DESC LIMIT 1,1;
+#situation1
 SELECT sname FROM s,sc,c
-WHERE s.sno=sc.sno AND sc.cno=c.cno AND c.cname='数据库' AND grade<(SELECT MAX(sc.grade) FROM sc,c
+WHERE s.sno=sc.sno AND sc.cno=c.cno AND c.cname='数据库' AND 
+grade<(SELECT MAX(sc.grade) FROM sc,c
 WHERE sc.cno=c.cno AND c.cname='数据库') ORDER BY grade DESC LIMIT 0,1 ;
+
+
+
+#7
+SELECT sname FROM s 
+WHERE sno IN (
+SELECT sc.sno FROM sc,c
+WHERE sc.cno=c.cno AND c.ccredit=3 AND sc.grade>=80 
+GROUP BY sc.sno HAVING COUNT(sc.cno)>=3);
+
+#8
+SELECT sno,COUNT(cno) FROM sc GROUP BY sno HAVING COUNT(cno)=1;
+
 
 /*
 仅为练习分组
@@ -40,7 +65,3 @@ WHERE cno IN
 (SELECT sc.cno FROM sc,c WHERE sc.cno=c.cno AND c.cname='数据库' ) 
 GROUP BY sc.cno;
 */
-SELECT sc.sno FROM sc,s
-WHERE (SELECT);
-
-SELECT sno,COUNT(cno) FROM sc GROUP BY sno HAVING COUNT(cno)=1;
