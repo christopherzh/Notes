@@ -59,12 +59,54 @@ DROP TABLE table1;
 TRUNCATE TABLE table1; #仅删除表内数据，不删除表
 ```
 
-## 约束，完整性条件
-
 ## 重命名表
 ```sql
 RENAME TABLE table1 TO renamed_table1;
 ```
+
+
+## 约束，完整性条件
+
+### 更新约束
+
+#### 主键约束
+```sql
+ALTER TABLE table1 
+ADD CONSTRAINT pk_1   PRIMARY KEY(id);
+```
+#### CHECK约束
+```sql
+ALTER TABLE table1 
+ADD CONSTRAINT c_1   CHECK(id>0 AND id<10);
+```
+
+#### UNIQUE约束
+```sql
+ALTER TABLE table1 
+ADD CONSTRAINT uni_1   UNIQUE(id);
+```
+
+#### DEFAULT约束
+```sql
+ALTER TABLE table1 
+ADD CONSTRAINT de_1   DEFAULT 10 FOR id;
+#格式：alter table 表名称 add constraint    约束别名    约束类型   默认值   for  列名
+```
+
+#### 外键约束
+```sql
+ALTER TABLE table1 
+ADD CONSTRAINT fk_1   FOREIGN KEY(id) REFERENCES fr_table1(fr_id); 
+#格式: alter table 表名 add constraint   约束别名   约束类型 (列名)   references   引用的表名称 （列名）
+```
+
+#### 非空约束
+```sql
+ALTER TABLE TABLE_NAME
+ALTER COLUMN COLUMN_NAME   TYPE_OF_  NOT NULL;
+```
+
+
 
 # 插入、更新与删除数据（INSERT,UPDATE,DELETE）
 
