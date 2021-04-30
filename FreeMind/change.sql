@@ -24,11 +24,24 @@ FROM s,c,sc
 WHERE s.sno=sc.sno AND c.cno=sc.cno AND ssex='男';
 
 #5
-SELECT sname FROM s 
-WHERE sno IN (
-SELECT sc.sno FROM sc,c
-WHERE sc.cno=c.cno AND c.ccredit=3 AND sc.grade>=80 
-GROUP BY sc.sno HAVING COUNT(sc.cno)>=3);
+SELECT DISTINCT bno,bname FROM boy
+WHERE bno IN (
+SELECT bno FROM boy
+GROUP BY bno HAVING AVG(grade)>=80);
 #6
+SELECT  bno,COUNT(cname),AVG(grade) FROM boy
+WHERE grade IS NOT NULL 
+GROUP BY bno ;
 #7
-GRANT 
+CREATE ROLE guest;
+GRANT SELECT ,UPDATE,INSERT
+ON TABLE sc
+TO guest;
+
+GRANT SELECT ,UPDATE,INSERT
+ON TABLE c
+TO guest;
+
+GRANT SELECT ,UPDATE,INSERT
+ON TABLE s
+TO guest;

@@ -19,6 +19,7 @@ create table SC(
     Cno char(1),
     Grade FLOAT,
     constraint c1 check (Grade>=0 and Grade<=100),
+    PRIMARY KEY (`Sno`,`Cno`)
     constraint fk_s foreign key (Sno) references S(Sno),
     constraint fk_c foreign key (Cno) references C(Cno)
 );
