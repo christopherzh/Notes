@@ -25,14 +25,11 @@ SHOW WARNINGS; #显示服务器警告信息
 
 
 # 创建数据库/模式
-除创建database外内容均来源于教材，不保证在mysql中能够正确执行
 ```sql
-CREATE SCHEMA schema1 [AUTHORIZATION ROOT]; #创建模式
+CREATE SCHEMA schema1; #创建模式
 CREATE DATABASE database1; #创建数据库
 #注：在mysql中，两者含义相等
-DROP SCHEMA schema1 <CASCADE|RESTRICT>; 
-#CASCADE:级联删除，将模式中数据库对象全部删除 
-#RESTRICT:限制删除，若该模式下定义了数据库对象，则拒绝删除
+DROP SCHEMA schema1; 
 ```
 
 # 创建表和修改表
@@ -166,6 +163,14 @@ DELETE * FROM table1
 SELECT column1,column2 FROM table1; #检索table1中选定的列
 SELECT * FROM table1; #检索table1中所有列
 SELECT DISTINCT id FROM table1； #检索id列中不同的行
+
+#本科教材上的语法格式
+SELECT [ALL|DISTINCT] <目标列表达式> [，<目标列表达式>,...]
+FROM <表名或视图名>[，<表名或视图名>,...]
+[WHERE <条件表达式>]
+[GROUP BY <列名1> [HAVING <条件表达式>]]
+[ORDER BY <列名2> [ASC|DESC]];
+
 ```
 
 ## 规定返回的记录数目
@@ -189,14 +194,118 @@ SELECT TOP 50 PERCENT * FROM table1; # 返回前50%的记录
 SELECT 列名称 FROM 表名称 WHERE 列 操作符 值
 SELECT * FROM table1 WHERE column1='data1'; #实例
 ```
-### 操作符、条件
+### 操作符
+|操作符|含义|
+|-|-|
+|=	|等于|
+|<>	或 !=|不等于|
+|>	|大于|
+|<	|小于|
+|>=	|大于等于|
+|<=	|小于等于|
+|AND|与|
+|OR|或|
+|NOT|非|
+|BETWEEN value1 AND value2|在两值之间| 
+|IN (value1,value2,...)|规定多个值|
+|IS NULL 或IS NOT NULL|对空值的查询|
+
+### LIKE与通配符
+LIKE 操作符用于在 WHERE 子句中搜索列中的指定模式，还可使用NOT LIKE来寻找不符合模式的记录
+```sql
+SELECT column_name(s) FROM table_name 
+WHERE column_name LIKE pattern
+
+#实例
+SELECT * FROM Persons WHERE City LIKE 'N%'
+ #从"Persons" 表中选取居住在以 "N" 开始的城市里的人
+```
+在搜索数据库中的数据时，SQL 通配符可以替代一个或多个字符。
+|通配符|	描述|
+|--|--|
+|%	|替代一个或多个字符|
+|_	|仅替代一个字符|
+|[charlist]	|字符列中的任何单一字符|
+|[^charlist]或[!charlist]|不在字符列中|
+
+###
 ## 排序检索数据（ORDER BY）
 
-## 分组数据（GROUP BY）
+- 可以按一个或多个属性列排序
+- 升序：ASC；降序：DESC；缺省值为升序
 
-## 嵌套查询
+当排序列含空值时:
+- ASC：排序列为空值的元组最后显示
+- DESC：排序列为空值的元组最先显示
+```sql
+# 实例
+SELECT Company, OrderNumber FROM Orders 
+ORDER BY Company DESC, OrderNumber ASC
+```
+
+## 数据分组与聚合函数（GROUP BY）
+
+
 
 ## 联接表
+
+## 嵌套查询
+子查询的限制：不能使用ORDER BY子句
+1. **不相关子查询**
+- 子查询的查询条件不依赖于父查询
+- 由里向外.逐层处理。即每个子查询在上一级查询处理之前求解，子查询的结果用于建立其父查询的查找条件
+2. **相关子查询**
+- 子查询的查询条件依赖于父查询
+- 首先取外层查询中表的第一个元组，根据它与内层查询相关的属性值处理内层查询，若WHERE子句返回值为真，则取此元组放入结果表
+- 然后再取外层表的下一个元组
+- 重复这一过程，直至外层表全部检查完为止
+
+### IN谓词
+### 比较运算符
+### ANY(SOME)或ALL谓词
+- ANY：任意一个值
+- ALL：所有值
+
+需要配合使用比较运算符
+
+|运算符组合|含义|
+|--|--|
+|> ANY	|大于子查询结果中的某个值 |      
+|> ALL	|大于子查询结果中的所有值|
+|< ANY	|小于子查询结果中的某个值  |  
+|< ALL	|小于子查询结果中的所有值|
+|>= ANY	|大于等于子查询结果中的某个值 |   
+|>= ALL	|大于等于子查询结果中的所有值|
+|<= ANY	|小于等于子查询结果中的某个值 |   
+|<= ALL	|小于等于子查询结果中的所有值|
+|= ANY	|等于子查询结果中的某个值   |     
+|=ALL	|等于子查询结果中的所有值（通常没有实际意义）|
+|!=（或<>）ANY	|不等于子查询结果中的某个值|
+|!=（或<>）ALL	|不等于子查询结果中的任何一个值|
+
+### EXISTS谓词
+1. EXISTS谓词
+- 带有EXISTS谓词的子查询不返回任何数据，只产生逻辑真值“true”或逻辑假值“false”
+- 若内层查询结果非空，则外层的WHERE子句返回真值
+- 若内层查询结果为空，则外层的WHERE子句返回假值
+- 由EXISTS引出的子查询，其目标列表达式通常都用* ，因为带EXISTS的子查询只返回真值或假值，给出列名无实际意义
+2. NOT EXISTS谓词
+- 若内层查询结果非空，则外层的WHERE子句返回假值
+- 若内层查询结果为空，则外层的WHERE子句返回真值
+```sql
+#使用文末数据库
+
+#查询学习全部课程学生姓名，即所要查询的学生，不存在一门课程他没有选修。
+#即该学生没有一门课程是他不选修的，就是说，该学生选修了所有课程。
+SELECT sname FROM s WHERE NOT EXISTS 
+(SELECT  * FROM c WHERE NOT EXISTS 
+(SELECT * FROM sc WHERE sc.sno=s.sno AND c.cno=sc.cno ) );
+
+#查询不选 3 号课程的学生学号与姓名
+SELECT  sno,sname FROM  s 
+WHERE NOT EXISTS(SELECT * FROM  sc WHERE s.sno=sc.sno AND cno='3');
+
+```
 
 ## 组合查询（UNION）
 
