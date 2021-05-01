@@ -360,21 +360,18 @@ WHERE cno IN (SELECT cno FROM c WHERE cname='数据结构');
 
 #### 比较运算符
 
-* 当能确切知道内层查询返回单值时，可用比较运算符（&gt;，&lt;，=，&gt;=，&lt;=，!=或&lt; &gt;）。
+* 当能确切知道内层查询返回单值时，可用比较运算符（>，<，=，>=，<=，!=或<>）。
 * 与ANY或ALL谓词配合使用
-* \`\`\`sql
-
-  **在上一个实例中，因为子查询只会返回一个结果，所以可使用=运算符进行匹配**
-
-  SELECT sc.sno,sage FROM sc LEFT JOIN s ON sc.sno=s.sno  
-
-  WHERE cno = \(SELECT cno FROM c WHERE cname='数据结构'\);
+  
+```sql
+#在上一个实例中，因为子查询只会返回一个结果，所以可使用=运算符进行匹配
+SELECT sc.sno,sage FROM sc LEFT JOIN s ON sc.sno=s.sno  
+WHERE cno = (SELECT cno FROM c WHERE cname='数据结构');
 
 ## 另一个实例：找出每个学生超过他选修课程平均成绩的课程号
+SELECT Sno,Cno FROM SC x WHERE Grade = SELECT AVG(Grade) FROM SC y WHERE y.Sno=x.Sno);#此查询为相关子查询，因为y.Sno=x.Sno
+```
 
-SELECT Sno,Cno FROM SC x WHERE Grade &gt;= \(SELECT AVG\(Grade\) FROM SC y WHERE y.Sno=x.Sno\); \#此查询为相关子查询，因为y.Sno=x.Sno
-
-```text
 ### ANY(SOME)或ALL谓词
 - ANY：任意一个值
 - ALL：所有值
