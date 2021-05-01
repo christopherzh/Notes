@@ -38,7 +38,12 @@ DROP SCHEMA schema1;
 
 ### 基础语法
 ```sql
-CREATE TABLE table1;
+CREATE TABLE table1; #基本语句
+
+#通过拷贝另一个表的结构及数据来创建表：
+CREATE TABLE 新表
+AS
+SELECT * FROM 旧表 
 ```
 
 ### 数据类型
@@ -130,6 +135,7 @@ DROP INDEX <索引名>; #删除索引
 # 插入、更新与删除数据（INSERT,UPDATE,DELETE）
 
 ## INSERT语句
+### 基本语法
 ```sql
 INSERT INTO 表名称 VALUES (值1, 值2,....)
 INSERT INTO 表名称 (列1, 列2,...) VALUES (值1, 值2,....)
@@ -137,6 +143,19 @@ INSERT INTO 表名称 (列1, 列2,...) VALUES (值1, 值2,....)
 #实例
 INSERT INTO table1 VALUES ('data1','data2');
 INSERT INTO table1 (column1,column2) VALUES ('data1','data2');
+```
+### 插入子查询结果
+只能为已经存在的表批量添加新数据，不复制表结构
+```sql
+INSERT INTO <表名>  [(<属性列1> [,<属性列2>…  )] 子查询;
+
+#如果两个表结构一样：
+INSERT INTO table_name_new SELECT * FROM table_name_old
+
+#如果两个表结构不一样：
+INSERT INTO table_name_new(column1,column2...) 
+SELECT column1,column2... FROM table_name_old
+
 ```
 
 ## UPDATE语句
@@ -247,7 +266,7 @@ ORDER BY Company DESC, OrderNumber ASC
 
 ## 数据分组与聚合函数（GROUP BY）
 ### 基本语法
-GROUP BY 语句用于结合合计函数，根据一个或多个列对结果集进行分组。
+GROUP BY 语句用于结合聚集函数，根据一个或多个列对结果集进行分组。
 ```sql
 SELECT column_name, aggregate_function(column_name)
 FROM table_name
@@ -273,7 +292,7 @@ SELECT Customer,SUM(OrderPrice) FROM Orders
 WHERE Customer='Bush' OR Customer='Adams'
 GROUP BY Customer
 HAVING SUM(OrderPrice)>1500
-````
+```
 
 ## 联接表
 
@@ -289,7 +308,29 @@ HAVING SUM(OrderPrice)>1500
 - 重复这一过程，直至外层表全部检查完为止
 
 ### IN谓词
+```sql
+#实例，使用文末数据库
+#查询选修课程名为数据结构的学生学号与年龄
+SELECT sc.sno,sage FROM sc LEFT JOIN s ON sc.sno=s.sno  
+WHERE cno IN (SELECT cno FROM c WHERE cname='数据结构');
+```
 ### 比较运算符
+- 当能确切知道内层查询返回单值时，可用比较运算符（>，<，=，>=，<=，!=或< >）。
+- 与ANY或ALL谓词配合使用
+- 
+```sql
+#在上一个实例中，因为子查询只会返回一个结果，所以可使用=运算符进行匹配
+SELECT sc.sno,sage FROM sc LEFT JOIN s ON sc.sno=s.sno  
+WHERE cno = (SELECT cno FROM c WHERE cname='数据结构');
+
+#另一个实例：找出每个学生超过他选修课程平均成绩的课程号
+SELECT Sno,Cno
+FROM  SC  x
+WHERE Grade >= (SELECT AVG(Grade) 
+				 FROM  SC y
+				 WHERE y.Sno=x.Sno); #此查询为相关子查询，因为y.Sno=x.Sno
+
+```
 ### ANY(SOME)或ALL谓词
 - ANY：任意一个值
 - ALL：所有值
@@ -311,6 +352,8 @@ HAVING SUM(OrderPrice)>1500
 |!=（或<>）ANY	|不等于子查询结果中的某个值|
 |!=（或<>）ALL	|不等于子查询结果中的任何一个值|
 
+注：以上操作符均可使用聚集函数MAX()与MIN()配合基本操作符来实现
+
 ### EXISTS谓词
 1. EXISTS谓词
 - 带有EXISTS谓词的子查询不返回任何数据，只产生逻辑真值“true”或逻辑假值“false”
@@ -320,6 +363,7 @@ HAVING SUM(OrderPrice)>1500
 2. NOT EXISTS谓词
 - 若内层查询结果非空，则外层的WHERE子句返回假值
 - 若内层查询结果为空，则外层的WHERE子句返回真值
+
 ```sql
 #使用文末数据库
 
@@ -332,11 +376,27 @@ SELECT sname FROM s WHERE NOT EXISTS
 #查询不选 3 号课程的学生学号与姓名
 SELECT  sno,sname FROM  s 
 WHERE NOT EXISTS(SELECT * FROM  sc WHERE s.sno=sc.sno AND cno='3');
-
 ```
 
 ## 组合查询（UNION）
+UNION 操作符用于合并两个或多个 SELECT 语句的结果集。
 
+请注意，UNION 内部的 SELECT 语句必须拥有相同数量的列。列也必须拥有相似的数据类型。同时，每条 SELECT 语句中的列的顺序必须相同。
+```sql
+SELECT column_name(s) FROM table_name1
+UNION
+SELECT column_name(s) FROM table_name2
+#注释：默认地，UNION 操作符选取不同的值。如果允许重复的值，请使用 UNION ALL。
+SELECT column_name(s) FROM table_name1
+UNION ALL
+SELECT column_name(s) FROM table_name2
+
+#实例
+SELECT Sno FROM sc WHERE Cno='1'
+UNION 
+SELECT Sno FROM sc WHERE Cno='2'
+
+```
 
 # 函数
 
@@ -344,13 +404,36 @@ WHERE NOT EXISTS(SELECT * FROM  sc WHERE s.sno=sc.sno AND cno='3');
 # 视图（VIEW）
 
 ## 创建视图
+```sql
+CREATE  VIEW <视图名>  [(<列名>  [，<列名>]…)]
+AS  <子查询>
+[WITH  CHECK  OPTION]；
+```
+- 组成视图的属性列名：全部省略或全部指定
+- 子查询不允许含有ORDER BY子句和DISTINCT短语
+- 视图总是显示最近的数据。每当用户查询视图时，数据库引擎通过使用 SQL 语句来重建数据
+- 数据库的设计和结构不会受到视图中的函数、where 或 join 语句的影响
+  
 
-## 更新视图
+
+```sql
+#实例，使用文末数据库
+#建立男学生的视图,属性包括学号、姓名、选修课程名和成绩
+
+CREATE VIEW boy (bno,bname,cname,grade) AS 
+SELECT s.sno,s.sname,c.cname,sc.Grade
+FROM s,c,sc
+WHERE s.sno=sc.sno AND c.cno=sc.cno AND ssex='男';
+```
 
 ## 删除视图
-
+```sql
+DROP VIEW view_name;
+```
 
 # 触发器    
+
+# 数据库安全性
 
 
 # 数据库实例
