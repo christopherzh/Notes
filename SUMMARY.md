@@ -1,3 +1,7 @@
-* [数据库](Database/SQL.md)
-* [Git](Git/Git.md)
-* [FreeMind](FreeMind/有关自由意志的思考.md)
+# Table of contents
+
+* [Introduction](README.md)
+* [数据库](sql.md)
+* [Git](git.md)
+* [FreeMind](you-guan-zi-you-yi-zhi-de-si-kao.md)
+
