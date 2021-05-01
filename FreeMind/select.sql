@@ -18,8 +18,8 @@ SELECT  Sno,Grade FROM sc WHERE Cno='2';
 SELECT sc.sno,s.sage FROM sc LEFT JOIN s ON sc.sno=s.sno 
 LEFT JOIN c ON sc.cno=c.cno WHERE  cname='数据结构';
 #solution2
-SELECT sc.sno,s.sage FROM sc LEFT JOIN s ON sc.sno=s.sno  
-WHERE cno=(SELECT cno FROM c WHERE cname='数据结构');
+SELECT sc.sno,sage FROM sc LEFT JOIN s ON sc.sno=s.sno  
+WHERE cno IN (SELECT cno FROM c WHERE cname='数据结构');
 
 #3
 SELECT  sno,sname FROM  s 
@@ -56,6 +56,14 @@ GROUP BY sc.sno HAVING COUNT(sc.cno)>=3);
 
 #8
 SELECT sno,COUNT(cno) FROM sc GROUP BY sno HAVING COUNT(cno)=1;
+
+
+
+SELECT * FROM  S WHERE Sdept='CS' 
+INTERSECT
+	SELECT *
+	FROM  S
+	WHERE Sage<=19;
 
 
 /*

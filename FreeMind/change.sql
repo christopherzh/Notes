@@ -45,3 +45,6 @@ TO guest;
 GRANT SELECT ,UPDATE,INSERT
 ON TABLE s
 TO guest;
+
+CREATE USER  zhang;
+GRANT guest TO zhang;
