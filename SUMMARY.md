@@ -5,3 +5,4 @@
 * [Git](Git/git.md)
 * [Freemind](Philosophies/freemind.md)
 
+# part1
