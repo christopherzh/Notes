@@ -42,8 +42,7 @@ DROP SCHEMA schema1;
 
 ### 创建表
 
-#### 基础语法
-
+基础语法
 ```sql
 CREATE TABLE table1; #基本语句
 
@@ -160,13 +159,13 @@ DROP INDEX <索引名>;
 
 ### INSERT语句
 
-#### 基本语法
+**基本语法**
 ```sql
 INSERT INTO 表名称 VALUES (值1, 值2,....)
 INSERT INTO 表名称 (列1, 列2,...) VALUES (值1, 值2,....)
 ```
 
-#### 实例
+**实例**
 ```sql
 INSERT INTO table1 VALUES ('data1','data2');
 INSERT INTO table1 (column1,column2) VALUES ('data1','data2');
@@ -177,7 +176,6 @@ INSERT INTO table1 (column1,column2) VALUES ('data1','data2');
 只能为已经存在的表批量添加新数据，不复制表结构
 
 ```sql
-#基本语法
 INSERT INTO <表名>  [(<属性列1> [,<属性列2>…  )] 子查询;
 
 #如果两个表结构一样：
@@ -189,17 +187,17 @@ SELECT column1,column2... FROM table_name_old
 ```
 
 ### UPDATE语句
-#### 基本语法
+**基本语法**
 ```sql
 UPDATE 表名称 SET 列名称 = 新值 WHERE 列名称 = 某值;
 ```
-#### 实例
+**实例**
 ```sql
 UPDATE S SET Sname='王强' WHERE Sno='201215124'; 
 ```
 
 ### DELETE语句
-#### 基本语法
+**基本语法**
 ```sql
 DELETE FROM 表名称 WHERE 列名称 = 值
 
@@ -207,7 +205,7 @@ DELETE FROM 表名称 WHERE 列名称 = 值
 DELETE FROM table1
 DELETE * FROM table1
 ```
-#### 实例
+**实例**
 ```sql
 DELETE FROM table1 WHERE column1 = 'data1'; 
 ```
@@ -250,11 +248,11 @@ SELECT TOP 50 PERCENT * FROM table1; # 返回前50%的记录
 ```
 
 ### WHERE子句
-#### 基础语法
+**基础语法**
 ```sql
 SELECT 列名称 FROM 表名称 WHERE 列 操作符 值
 ```
-#### 实例
+**实例**
 ```sql
 SELECT * FROM table1 WHERE column1='data1'; 
 ```
@@ -316,15 +314,15 @@ ORDER BY Company DESC, OrderNumber ASC
 
 ### 数据分组与聚合函数（GROUP BY）
 GROUP BY 语句用于结合聚集函数，根据一个或多个列对结果集进行分组。
-#### 基本语法
 
+**基本语法**
 ```sql
 SELECT column_name, aggregate_function(column_name)
 FROM table_name
 WHERE column_name operator value
 GROUP BY column_name
 ```
-#### 实例
+**实例**
 ```sql
 #对多个列进行分组
 SELECT Customer,OrderDate,SUM(OrderPrice) FROM Orders
@@ -334,7 +332,7 @@ GROUP BY Customer,OrderDate
 #### HAVING子句
 
 在SQL中增加HAVING子句原因是，WHERE关键字无法与合计函数一起使用。
-##### 基本语法
+**基本语法**
 ```sql
 SELECT column_name, aggregate_function(column_name)
 FROM table_name
@@ -342,7 +340,7 @@ WHERE column_name operator value
 GROUP BY column_name
 HAVING aggregate_function(column_name) operator value
 ```
-##### 实例
+**实例**
 ```sql
 SELECT Customer,SUM(OrderPrice) FROM Orders
 WHERE Customer='Bush' OR Customer='Adams'
@@ -439,7 +437,7 @@ WHERE NOT EXISTS(SELECT * FROM  sc WHERE s.sno=sc.sno AND cno='3');
 UNION 操作符用于合并两个或多个 SELECT 语句的结果集。
 
 请注意，UNION 内部的 SELECT 语句必须拥有相同数量的列。列也必须拥有相似的数据类型。同时，每条 SELECT 语句中的列的顺序必须相同。
-#### 基本语法
+**基本语法**
 ```sql
 SELECT column_name(s) FROM table_name1
 UNION
@@ -449,7 +447,7 @@ SELECT column_name(s) FROM table_name1
 UNION ALL
 SELECT column_name(s) FROM table_name2
 ```
-#### 实例
+**实例**
 ```sql
 SELECT Sno FROM sc WHERE Cno='1'
 UNION 
@@ -461,7 +459,7 @@ SELECT Sno FROM sc WHERE Cno='2'
 ## 视图（VIEW）
 
 ### 创建视图
-#### 基本语法
+**基本语法**
 ```sql
 CREATE  VIEW <视图名>  [(<列名>  [，<列名>]…)]
 AS  <子查询>
@@ -472,7 +470,8 @@ AS  <子查询>
 * 子查询不允许含有ORDER BY子句和DISTINCT短语
 * 视图总是显示最近的数据。每当用户查询视图时，数据库引擎通过使用 SQL 语句来重建数据
 * 数据库的设计和结构不会受到视图中的函数、where 或 join 语句的影响
-#### 实例
+
+**实例**
 ```sql
 #使用文末数据库
 
@@ -491,7 +490,7 @@ DROP VIEW view_name;
 
 ## 触发器
 ### 定义触发器
-#### 基本语法
+**基本语法**
 ```sql
 CREATE TRIGGER <触发器名>  
 {BEFORE|AFTER} <触发事件> ON <表名>
@@ -499,7 +498,7 @@ FOR EACH {ROW|STATEMENT}
 [WHEN <触发条件>]
 <触发动作体>
 ```
-#### 实例
+**实例**
 ```sql
 #使用文末数据库
 
