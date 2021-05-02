@@ -111,7 +111,7 @@ ADD CONSTRAINT c_1   CHECK(id>0 AND id<10);
 
 ```sql
 ALTER TABLE table1 
-ADD CONSTRAINT uni_1   UNIQUE(id);
+ADD CONSTRAINT uni_1  UNIQUE(id);
 ```
 
 **DEFAULT约束**
@@ -119,22 +119,23 @@ ADD CONSTRAINT uni_1   UNIQUE(id);
 ```sql
 ALTER TABLE table1 
 ADD CONSTRAINT de_1   DEFAULT 10 FOR id;
-#格式：alter table 表名称 add constraint    约束别名    约束类型   默认值   for  列名
+#格式：alter table 表名称 add constraint 约束别名 约束类型 默认 for 列名
 ```
 
 **外键约束**
 
 ```sql
 ALTER TABLE table1 
-ADD CONSTRAINT fk_1   FOREIGN KEY(id) REFERENCES fr_table1(fr_id); 
-#格式: alter table 表名 add constraint   约束别名   约束类型 (列名)   references   引用的表名称 （列名）
+ADD CONSTRAINT fk_1   
+FOREIGN KEY(id) REFERENCES fr_table1(fr_id); 
+#格式: alter table 表名 add constraint 约束别名 约束类型(列名)references 引用的表名称(列名)
 ```
 
 **非空约束**
 
 ```sql
 ALTER TABLE TABLE_NAME
-ALTER COLUMN COLUMN_NAME   TYPE_OF_  NOT NULL;
+ALTER COLUMN COLUMN_NAME  TYPE_OF_  NOT NULL;
 ```
 
 #### 删除约束
@@ -147,8 +148,12 @@ DROP FOREIGN KEY fk_1; ##FOREIGN KEY约束类型，fk_1为完整性约束名
 ### 索引
 
 ```sql
-CREATE [UNIQUE] [CLUSTER] INDEX <索引名> ON <表名>(<列名>[DESC|ASC],...); #建立索引
-DROP INDEX <索引名>; #删除索引
+#建立索引
+CREATE [UNIQUE] [CLUSTER] INDEX <索引名> 
+ON <表名>(<列名>[DESC|ASC],...); 
+
+#删除索引
+DROP INDEX <索引名>; 
 ```
 
 ## 插入、更新与删除数据（INSERT,UPDATE,DELETE）
@@ -156,12 +161,13 @@ DROP INDEX <索引名>; #删除索引
 ### INSERT语句
 
 #### 基本语法
-
 ```sql
 INSERT INTO 表名称 VALUES (值1, 值2,....)
 INSERT INTO 表名称 (列1, 列2,...) VALUES (值1, 值2,....)
+```
 
-#实例
+#### 实例
+```sql
 INSERT INTO table1 VALUES ('data1','data2');
 INSERT INTO table1 (column1,column2) VALUES ('data1','data2');
 ```
@@ -171,6 +177,7 @@ INSERT INTO table1 (column1,column2) VALUES ('data1','data2');
 只能为已经存在的表批量添加新数据，不复制表结构
 
 ```sql
+#基本语法
 INSERT INTO <表名>  [(<属性列1> [,<属性列2>…  )] 子查询;
 
 #如果两个表结构一样：
@@ -182,21 +189,27 @@ SELECT column1,column2... FROM table_name_old
 ```
 
 ### UPDATE语句
-
+#### 基本语法
 ```sql
 UPDATE 表名称 SET 列名称 = 新值 WHERE 列名称 = 某值;
-UPDATE S SET Sname='王强' WHERE Sno='201215124'; #实例
+```
+#### 实例
+```sql
+UPDATE S SET Sname='王强' WHERE Sno='201215124'; 
 ```
 
 ### DELETE语句
-
+#### 基本语法
 ```sql
 DELETE FROM 表名称 WHERE 列名称 = 值
-DELETE FROM table1 WHERE column1 = 'data1'; #实例
 
 #删除所有行，表的结构、属性和索引都是完整的
 DELETE FROM table1
 DELETE * FROM table1
+```
+#### 实例
+```sql
+DELETE FROM table1 WHERE column1 = 'data1'; 
 ```
 
 ## 检索数据（SELECT）
@@ -237,12 +250,13 @@ SELECT TOP 50 PERCENT * FROM table1; # 返回前50%的记录
 ```
 
 ### WHERE子句
-
 #### 基础语法
-
 ```sql
 SELECT 列名称 FROM 表名称 WHERE 列 操作符 值
-SELECT * FROM table1 WHERE column1='data1'; #实例
+```
+#### 实例
+```sql
+SELECT * FROM table1 WHERE column1='data1'; 
 ```
 
 #### 操作符
@@ -250,16 +264,16 @@ SELECT * FROM table1 WHERE column1='data1'; #实例
 | 操作符 | 含义 |
 | :--- | :--- |
 | = | 等于 |
-| &lt;&gt;    或 != | 不等于 |
-| &gt; | 大于 |
-| &lt; | 小于 |
-| &gt;= | 大于等于 |
-| &lt;= | 小于等于 |
+| <>>    或 != | 不等于 |
+| >| 大于 |
+| <> | 小于 |
+| >= | 大于等于 |
+| <= | 小于等于 |
 | AND | 与 |
 | OR | 或 |
 | NOT | 非 |
 | BETWEEN value1 AND value2 | 在两值之间 |
-| IN \(value1,value2,...\) | 规定多个值 |
+| IN (value1,value2,...) | 规定多个值 |
 | IS NULL 或IS NOT NULL | 对空值的查询 |
 
 #### LIKE与通配符
@@ -267,6 +281,7 @@ SELECT * FROM table1 WHERE column1='data1'; #实例
 LIKE 操作符用于在 WHERE 子句中搜索列中的指定模式，还可使用NOT LIKE来寻找不符合模式的记录
 
 ```sql
+#基本语法
 SELECT column_name(s) FROM table_name 
 WHERE column_name LIKE pattern
 
@@ -293,26 +308,25 @@ SELECT * FROM Persons WHERE City LIKE 'N%'
 
 * ASC：排序列为空值的元组最后显示
 * DESC：排序列为空值的元组最先显示
-
-  ```sql
-  # 实例
-  SELECT Company, OrderNumber FROM Orders 
-  ORDER BY Company DESC, OrderNumber ASC
-  ```
+```sql
+#实例
+SELECT Company, OrderNumber FROM Orders 
+ORDER BY Company DESC, OrderNumber ASC
+```
 
 ### 数据分组与聚合函数（GROUP BY）
-
-#### 基本语法
-
 GROUP BY 语句用于结合聚集函数，根据一个或多个列对结果集进行分组。
+#### 基本语法
 
 ```sql
 SELECT column_name, aggregate_function(column_name)
 FROM table_name
 WHERE column_name operator value
 GROUP BY column_name
-
-#实例，对多个列进行分组
+```
+#### 实例
+```sql
+#对多个列进行分组
 SELECT Customer,OrderDate,SUM(OrderPrice) FROM Orders
 GROUP BY Customer,OrderDate
 ```
@@ -320,15 +334,16 @@ GROUP BY Customer,OrderDate
 #### HAVING子句
 
 在SQL中增加HAVING子句原因是，WHERE关键字无法与合计函数一起使用。
-
+##### 基本语法
 ```sql
 SELECT column_name, aggregate_function(column_name)
 FROM table_name
 WHERE column_name operator value
 GROUP BY column_name
 HAVING aggregate_function(column_name) operator value
-
-#实例
+```
+##### 实例
+```sql
 SELECT Customer,SUM(OrderPrice) FROM Orders
 WHERE Customer='Bush' OR Customer='Adams'
 GROUP BY Customer
@@ -424,7 +439,7 @@ WHERE NOT EXISTS(SELECT * FROM  sc WHERE s.sno=sc.sno AND cno='3');
 UNION 操作符用于合并两个或多个 SELECT 语句的结果集。
 
 请注意，UNION 内部的 SELECT 语句必须拥有相同数量的列。列也必须拥有相似的数据类型。同时，每条 SELECT 语句中的列的顺序必须相同。
-
+#### 基本语法
 ```sql
 SELECT column_name(s) FROM table_name1
 UNION
@@ -433,8 +448,9 @@ SELECT column_name(s) FROM table_name2
 SELECT column_name(s) FROM table_name1
 UNION ALL
 SELECT column_name(s) FROM table_name2
-
-#实例
+```
+#### 实例
+```sql
 SELECT Sno FROM sc WHERE Cno='1'
 UNION 
 SELECT Sno FROM sc WHERE Cno='2'
@@ -445,7 +461,7 @@ SELECT Sno FROM sc WHERE Cno='2'
 ## 视图（VIEW）
 
 ### 创建视图
-
+#### 基本语法
 ```sql
 CREATE  VIEW <视图名>  [(<列名>  [，<列名>]…)]
 AS  <子查询>
@@ -456,11 +472,11 @@ AS  <子查询>
 * 子查询不允许含有ORDER BY子句和DISTINCT短语
 * 视图总是显示最近的数据。每当用户查询视图时，数据库引擎通过使用 SQL 语句来重建数据
 * 数据库的设计和结构不会受到视图中的函数、where 或 join 语句的影响
-
+#### 实例
 ```sql
-#实例，使用文末数据库
-#建立男学生的视图,属性包括学号、姓名、选修课程名和成绩
+#使用文末数据库
 
+#建立男学生的视图,属性包括学号、姓名、选修课程名和成绩
 CREATE VIEW boy (bno,bname,cname,grade) AS 
 SELECT s.sno,s.sname,c.cname,sc.Grade
 FROM s,c,sc
@@ -482,11 +498,43 @@ CREATE TRIGGER <触发器名>
 FOR EACH {ROW|STATEMENT}
 [WHEN <触发条件>]
 <触发动作体>
-
-#实例
-
 ```
-#### 语法说明
+#### 实例
+```sql
+#使用文末数据库
+
+#更新一个学生的学号信息时能够级联更新此学生在SC表中的选课记录的学号信息
+CREATE TRIGGER update_sno1 
+AFTER UPDATE ON S
+FOR EACH ROW
+UPDATE  sc SET  sc.sno=new.sno 
+WHERE sc.sno=old.sno;
+
+#每个班的学生不能超过 30 个，如果低于此数，添加可以完成；如果超过此数，则插入将不能实现。
+CREATE TRIGGER insert_stu
+AFTER INSERT ON S
+FOR EACH ROW
+BEGIN
+	DECLARE stuno INT;
+    SELECT COUNT(*) INTO stuno FROM s;
+    IF stuno > 30 THEN
+		SIGNAL SQLSTATE 'HY000' SET MESSAGE_TEXT = 'Throw Exceptions: Table Full';
+	END IF;
+END 
+
+#当修改 SC 表中的 Grade 字段时将其修改前后的信息保存在 SC_log 表中
+CREATE TABLE sc_log(
+    pre_grade int CHECK(pre_grade BETWEEN 0 AND 100),
+    now_grade int CHECK(now_grade BETWEEN 0 AND 100)
+);
+CREATE TRIGGER update_grade
+AFTER UPDATE ON  sc
+FOR EACH ROW 
+BEGIN
+	INSERT INTO SC_log VALUES (OLD.Grade, NEW.Grade);
+END
+```
+语法说明：
 1. 创建者：表的拥有者
 2. 触发器名
 3. 表名：触发器的目标表
