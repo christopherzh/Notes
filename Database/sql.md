@@ -474,7 +474,41 @@ DROP VIEW view_name;
 ```
 
 ## 触发器
+### 定义触发器
+#### 基本语法
 ```sql
+CREATE TRIGGER <触发器名>  
+{BEFORE|AFTER} <触发事件> ON <表名>
+FOR EACH {ROW|STATEMENT}
+[WHEN <触发条件>]
+<触发动作体>
+
+#实例
+
+```
+#### 语法说明
+1. 创建者：表的拥有者
+2. 触发器名
+3. 表名：触发器的目标表
+4. 触发事件：INSERT、DELETE、UPDATE
+5. 触发器类型
+   - 行级触发器（FOR EACH ROW）
+   - 语句级触发器（FOR EACH STATEMENT）
+
+### 激活触发器
+1. 触发器的执行，是由触发事件激活的，并由数据库服务器自动执行
+2. 一个数据表上可能定义了多个触发器
+   - 同一个表上的多个触发器激活时遵循如下的执行顺序：
+      1. 执行该表上的BEFORE触发器；
+      2. 激活触发器的SQL语句；
+      3. 执行该表上的AFTER触发器。
+
+### 删除触发器
+```sql
+DROP TRIGGER <触发器名> ON <表名>;
+
+#实例，删除教师表Teacher上的触发器Insert_Sal
+DROP TRIGGER Insert_Sal ON Teacher;
 ```
 ## 数据库安全性
 
