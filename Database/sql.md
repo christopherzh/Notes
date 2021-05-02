@@ -141,7 +141,7 @@ ALTER COLUMN COLUMN_NAME   TYPE_OF_  NOT NULL;
 
 ```sql
 ALTER TABLE table1
-DROP fk_1; ##fk_1为完整性约束名
+DROP  FOREIGN KEY fk_1; ##fk_1为完整性约束名
 ```
 
 ### 索引
