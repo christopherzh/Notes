@@ -35,15 +35,16 @@ SELECT sno,AVG(grade) FROM sc  WHERE cno='1' OR grade>=60
 GROUP BY sc.sno ORDER BY  AVG(grade) DESC ;
 
 #6
-#situation2
-SELECT sname FROM s,sc,c
-WHERE s.sno=sc.sno AND sc.cno=c.cno AND cname='数据库'
-ORDER BY grade DESC LIMIT 1,1;
 #situation1
 SELECT sname FROM s,sc,c
 WHERE s.sno=sc.sno AND sc.cno=c.cno AND c.cname='数据库' AND 
 grade<(SELECT MAX(sc.grade) FROM sc,c
 WHERE sc.cno=c.cno AND c.cname='数据库') ORDER BY grade DESC LIMIT 0,1 ;
+#situation2
+SELECT sname FROM s,sc,c
+WHERE s.sno=sc.sno AND sc.cno=c.cno AND cname='数据库'
+ORDER BY grade DESC LIMIT 1,1;
+
 
 
 
@@ -57,13 +58,6 @@ GROUP BY sc.sno HAVING COUNT(sc.cno)>=3);
 #8
 SELECT sno,COUNT(cno) FROM sc GROUP BY sno HAVING COUNT(cno)=1;
 
-
-
-SELECT * FROM  S WHERE Sdept='CS' 
-INTERSECT
-	SELECT *
-	FROM  S
-	WHERE Sage<=19;
 
 
 /*
