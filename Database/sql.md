@@ -348,7 +348,20 @@ GROUP BY Customer
 HAVING SUM(OrderPrice)>1500
 ```
 
-### 联接表
+### 联接表（JOIN）
+JOIN用于根据两个或多个表中的列之间的关系，从这些表中查询数据。
+
+下面列出了您可以使用的 JOIN 类型，以及它们之间的差异。
+- JOIN(INNER JOIN): 如果表中有至少一个匹配，则返回行
+- LEFT JOIN: 即使右表中没有匹配，也从左表返回所有的行
+- RIGHT JOIN: 即使左表中没有匹配，也从右表返回所有的行
+- FULL JOIN: 只要其中一个表中存在匹配，就返回行
+```sql
+SELECT column_name(s)
+FROM table_name1
+INNER|LEFT|RIGHT|FULL JOIN table_name2 
+ON table_name1.column_name=table_name2.column_name
+```
 
 ### 嵌套查询
 
