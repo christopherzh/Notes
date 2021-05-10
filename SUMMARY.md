@@ -4,8 +4,12 @@
 
 ## DataBase
 * [Sql](Database/sql.md)
-* [Git](Git/git.md)
-* [Freemind](Philosophies/freemind.md)
 
 ## Linux
 * [Linux Kernel Development](Linux/linux_kernel_development.md)
+
+## Git
+* [Git](Git/git.md)
+
+## Others
+* [Freemind](Philosophies/freemind.md)
