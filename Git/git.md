@@ -12,6 +12,7 @@ $ sudo apt-get install git
 
 ## 使用SSH连接到Github
 [Github官方指南-使用SSH连接到Github](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+
 1. 打开 Git Bash
 2. 运行 ssh-keygen -t rsa -b 4096 -C "邮箱地址"，随后按回车三次
 3. 打开本地用户目录里的 .ssh 文件夹
