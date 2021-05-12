@@ -6,7 +6,7 @@
 * [Sql](Database/sql.md)
 
 ## OS
-*[Os](OS/os.md)
+* [Os](OS/os.md)
 
 ## Linux
 * [Linux Kernel Development](Linux/linux_kernel_development.md)
