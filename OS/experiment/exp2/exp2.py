@@ -43,9 +43,11 @@ window.title('MultiModal Sentiment Analysis Application')
 
 # 设定窗口的大小
 window.geometry('600x380')
-photo = tk.PhotoImage(file="bg.png")
+
+photo = tk.PhotoImage(file="OS/experiment/exp2/bg.png")
 background_label = tk.Label(window, image=photo)
 background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
 
 var = tk.StringVar()
 var.set('Please upload to run analysis procedure \nbelow or in the menu')
