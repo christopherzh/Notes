@@ -21,9 +21,10 @@ $ sudo apt-get install git
 6. 在本机使用 ssh -T git@github.com 命令验证是否已添加成功，随后输入yes
 7. 如果看到 Permission denied (publickey). 就说明失败；如果看到 Hi XXXX! You've successfully authenticated, but GitHub does not provide shell access
    
-## 本地仓库关联远程仓库
+## 本地仓库关联远程仓库 
 
 # 一些资源
 - [官方网站](https://www.git-scm.com/)
-- [廖雪峰的教程](https://www.liaoxuefeng.com/wiki/896043488029600)
+- [廖雪峰的教程](https://www.liaoxuefeng.com/wiki/896043488029600) 
+- 
 
