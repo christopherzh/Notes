@@ -4,7 +4,7 @@ from tkinter.ttk import Progressbar
 from tkinter import ttk
 import random
 import time
-RATE=50
+RATE=3
 PNUM=5
 CLOCK=0
 pidList=['A','B','C','D','E']
@@ -35,9 +35,11 @@ class PCB:
 
 def init(): ##初始化进程，生成五个进程并按到达时间将它们放入就绪队列
     readyList.clear()
+    global CLOCK
     CLOCK=0
     for i in range(PNUM):
         readyList.append(PCB(pidList[i],1,var[i][0].get(),var[i][1].get(),0,0,'Ready'))
+        print(var[i][0].get(),var[i][1].get());
         for j in range(1,4):
             varLbP[i][j].set('NaN')
         bar[i]['value'] = 0
