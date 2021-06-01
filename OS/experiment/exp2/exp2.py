@@ -35,6 +35,7 @@ class PCB:
 
 def init(): ##初始化进程，生成五个进程并按到达时间将它们放入就绪队列
     readyList.clear()
+    CLOCK=0
     for i in range(PNUM):
         readyList.append(PCB(pidList[i],1,var[i][0].get(),var[i][1].get(),0,0,'Ready'))
         for j in range(1,4):
@@ -159,7 +160,7 @@ for i in range(PNUM):
     for j in range(2):
         varr.append(tk.IntVar())
         varr[j].set(initList[i][j])
-        spinn.append(tk.Spinbox(frmInput, from_=0, to=15, width=5,textvariable=varr[j]))
+        spinn.append(tk.Spinbox(frmInput, from_=0, to=15, width=8,textvariable=varr[j]))
         spinn[j].grid(row=1+i,column=1+2*j)
     var.append(varr)
     spin.append(spinn)
