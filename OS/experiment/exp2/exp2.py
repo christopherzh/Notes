@@ -4,8 +4,9 @@ from tkinter.ttk import Progressbar
 from tkinter import ttk
 import random
 import time
-RATE=1.0
+RATE=50
 PNUM=5
+CLOCK=0
 pidList=['A','B','C','D','E']
 class PCB:
     def __init__(self,pid,priority,arrTime,serveTime,runTime,waitTime,state): ##初始化进程
@@ -28,20 +29,17 @@ class PCB:
 
     def running(self):      ##进程运行时状态变化
         self.runTime+=1
-    '''
-    def output(self):   ##hrrn输出
-        print("进程"+str(self.pid),"优先级："+str(self.priority),"到达时间:"+str(self.arrTime),
-              "还需运行时间:"+str(self.allTime),"已运行时间:"+str(self.cpuTime),
-              "开始阻塞时间："+str(self.start_block),"阻塞时间："+str(self.blockTime),"状态："+self.state)
-    def Output(self):   ##sjf fcfs输出
-        print("进程"+str(self.pid),"正在执行，到达时间:"+str(self.arrTime),
-              "还需运行时间:"+str(self.allTime),"已运行时间:"+str(self.cpuTime))
+    def waiting(self):      ##进程等待时状态变化
+        self.waitTime+=1
 
-'''
+
 def init(): ##初始化进程，生成五个进程并按到达时间将它们放入就绪队列
     readyList.clear()
     for i in range(PNUM):
         readyList.append(PCB(pidList[i],1,var[i][0].get(),var[i][1].get(),0,0,'Ready'))
+        for j in range(1,4):
+            varLbP[i][j].set('NaN')
+        bar[i]['value'] = 0
     for i in range(len(readyList)-1):
         for j in range(i+1,len(readyList)):
             if readyList[i].arrTime>readyList[j].arrTime:
@@ -54,9 +52,28 @@ def sortProcessbyArrTime():
         for j in range(4):
             lbP[rank][j].grid(row=i+1,column=j)
         bar[rank].grid(row=i+1,column=4,pady=28)
-def FCFS():
-    pass
-def SJF():
+
+def FCFS(): #先来先服务
+    pos=ord(readyList[0].pid)-ord('A')
+    if(readyList[0].runTime>=readyList[0].serveTime): #当前进程已经完成
+        varLbP[pos][1].set(readyList[0].arrTime+readyList[0].runTime+readyList[0].waitTime)
+        varLbP[pos][2].set(readyList[0].runTime+readyList[0].waitTime)
+        varLbP[pos][3].set(float(readyList[0].runTime+readyList[0].waitTime)/float(readyList[0].serveTime))
+        readyList.remove(readyList[0]) 
+
+        if(len(readyList)>=1): #当前周期下还应运行一个新的进程
+            readyList[0].running()
+            bar[ord(readyList[0].pid)-ord('A')].step(amount=100.0/readyList[0].serveTime-0.001) #修改进度条
+    else:
+        readyList[0].running()
+        bar[pos].step(amount=100.0/readyList[0].serveTime-0.001) #修改进度条
+    window.update()
+    for i in range(1,len(readyList)): #修改其他进程状态
+        if(readyList[i].arrTime<=CLOCK): #若当前时钟周期大于等于进程到达时间，即为等待状态
+            readyList[i].waiting()
+
+    
+def SJF(): #最短进程优先
     pass
 def RR():
     pass
@@ -65,11 +82,22 @@ def HRN():
 
 
 
-def allRun():
-    print('why')
-def reset(varList):
-    pass
-
+def allRun(): #执行到底
+    cpuTime=time.time()
+    while len(readyList)>0:
+        if(time.time()-cpuTime>=1/RATE):
+            if(selected.get()==1):
+                FCFS()
+            elif(selected.get()==2):
+                SJF()
+            elif(selected.get()==3):
+                RR()
+            else:
+                HRN()
+            cpuTime=time.time()
+            global CLOCK
+            CLOCK+=1
+            
 def stop():
     pass
 def stepRun():
@@ -160,7 +188,7 @@ rad4.place(relx=0.4, rely=0.4)
 btnAllRun = tk.Button(frmControl, text="执行到底",command=lambda:allRun())
 btnStepRun = tk.Button(frmControl, text="步进执行",command=lambda:stepRun())
 btnStop = tk.Button(frmControl, text="   停止   ",command=lambda:stop())
-btnReset = tk.Button(frmControl, text="   复位   ",command=lambda:reset())
+btnReset = tk.Button(frmControl, text="   复位   ",command=lambda:init())
 btnAllRun.place(relx=0.2, rely=0.5)
 btnStepRun.place(relx=0.6, rely=0.5)
 btnStop.place(relx=0.2, rely=0.7)
@@ -197,7 +225,6 @@ for i in range(PNUM):
     #第一列到四列
     for j in range(4):
         varLbPP.append(tk.StringVar())
-        print(varLbPP)
         if j==0:
             varLbPP[j].set(pidList[i])
         else:
@@ -209,7 +236,7 @@ for i in range(PNUM):
     #第五列进程进度条
     bar.append(Progressbar(frmResult, length=barlength))
     bar[i].grid(row=i+1,column=4,pady=28)
-    bar[i].step(amount=20*(i+1)-1)
+
 
 #提示信息
 lHelp = tk.Label(window, text="电计1806张子航 201873049\n\n左上角为进程模拟调度结果\n\n右上角为进程输入\n\n右下角为算法与功能选择", 
@@ -221,24 +248,21 @@ lHelp.place(relx=0.25,rely=0.65)# 放置标签
 menubar = tk.Menu(window) # 创建一个菜单栏
 
 filemenu = tk.Menu(menubar, tearoff=0) # 创建一个File菜单项
-menubar.add_cascade(label='File', menu=filemenu) # 将上面定义的空菜单命名为File，放在菜单栏中，就是装入那个容器中
+menubar.add_cascade(label='文件', menu=filemenu) # 将上面定义的空菜单命名为File，放在菜单栏中，就是装入那个容器中
 
 submenu = tk.Menu(filemenu, tearoff=0)  # 在File上创建菜单
-filemenu.add_cascade(label='Upload', menu=submenu, underline=0)
+filemenu.add_command(label='上传')
 
-submenu.add_command(label='Video Upload', command=FCFS)
-submenu.add_command(label='Audio Upload', command=SJF)
-submenu.add_command(label='Text Upload', command=HRN)
 
-filemenu.add_command(label='Exit', command=window.quit)
+filemenu.add_command(label='退出', command=window.quit)
 
 runmenu = tk.Menu(menubar, tearoff=0)
-menubar.add_cascade(label='Run', menu=runmenu)
+menubar.add_cascade(label='运行', menu=runmenu)
 
 helpmenu = tk.Menu(menubar, tearoff=0)
-menubar.add_cascade(label='Help', menu=helpmenu)
-helpmenu.add_command(label='Help', command=help_message)
-helpmenu.add_command(label='About', command=about_message)
+menubar.add_cascade(label='关于', menu=helpmenu)
+helpmenu.add_command(label='帮助', command=help_message)
+helpmenu.add_command(label='关于', command=about_message)
 
 window.config(menu=menubar) # 创建菜单栏完成后，配置让菜单栏menubar显示出来
 
