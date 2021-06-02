@@ -5,7 +5,20 @@ for (var i = 0; i < 10; i++) {
 }
 var nowPos = 100;
 function SCAN() {
-
+    var i;
+    var minPos;
+    var len = requestList.length;
+    for (i = 0; i < len; i++) {
+        for (var j = 0; j < requestList.length; j++) {
+            if (Math.abs(nowPos - requestList[j]) < moveLength[i]) {
+                moveLength[i] = Math.abs(nowPos - requestList[j])
+                minPos = j; //当前磁头应移到的位置
+            }
+        }
+        nowPos = requestList[minPos]; //修改当前磁头位置
+        requestList.splice(minPos,1);
+        document.write(nowPos, '\n\n');
+    }
 }
 function SSTF() {
     var i;
