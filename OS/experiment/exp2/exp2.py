@@ -1,13 +1,19 @@
 import tkinter as tk
 import tkinter.messagebox as messagebox
 from tkinter.ttk import Progressbar
-from tkinter import ttk
 import random
 import time
-RATE=3
-PNUM=5
-CLOCK=0
-pidList=['A','B','C','D','E']
+
+
+PNUM=5 #进程模拟数
+CLOCK=0 #时钟周期数
+STATE=1 #模拟状态，1为运行0为暂停
+LASTRUNSTATE=0 #上个周期整体运行状态，0为未执行，1为执行
+pidList=['A','B','C','D','E'] #进程名列表
+
+readyList=[] #新建就绪队列
+RRList=[] #为轮转RR建立待执行队列
+
 class PCB:
     def __init__(self,pid,priority,arrTime,serveTime,runTime,waitTime,state): ##初始化进程
         self.pid=pid
@@ -17,15 +23,6 @@ class PCB:
         self.runTime=runTime
         self.waitTime=waitTime
         self.state=state
-    
-    def setRun(self):    ##将状态置为Run
-        self.state='Run'
-
-    def setFinish(self):     ##将状态置为Finish
-        self.state='Finish'
-
-    def setReady(self):      ##将状态置为Ready
-        self.state='Ready'
 
     def running(self):      ##进程运行时状态变化
         self.runTime+=1
@@ -34,78 +31,201 @@ class PCB:
 
 
 def init(): ##初始化进程，生成五个进程并按到达时间将它们放入就绪队列
-    readyList.clear()
+    #首先清空各个变量
     global CLOCK
     CLOCK=0
+    global STATE
+    STATE=0
+    global NOWPROCESS
+    NOWPROCESS=0
+    global RRList
+    readyList.clear()
+    RRList.clear()
+
+    #随后重新初始化就绪队列
     for i in range(PNUM):
         readyList.append(PCB(pidList[i],1,var[i][0].get(),var[i][1].get(),0,0,'Ready'))
-        print(var[i][0].get(),var[i][1].get());
         for j in range(1,4):
             varLbP[i][j].set('NaN')
         bar[i]['value'] = 0
-    for i in range(len(readyList)-1):
-        for j in range(i+1,len(readyList)):
-            if readyList[i].arrTime>readyList[j].arrTime:
-                readyList[i],readyList[j]=readyList[j],readyList[i]
     sortProcessbyArrTime()
+    sortProcessLabelbyReadyList()
+    messagebox.showinfo(title='提示',message='成功!')
 
-def sortProcessbyArrTime():
+def findBorder(clock):
+    t=0
+    for i in range(len(readyList)): 
+        if(readyList[i].arrTime>clock): #寻找第一个大于CLOck的进程，即寻找不大于CLOCK的进程的个数
+            t=i #找到，保存在t中
+            break
+        t=i+1 #未找到，即全部不大于，个数为等待队列的长度
+    return t
+
+
+def sortProcessLabelbyReadyList():
     for i in range(PNUM):
         rank=ord(readyList[i].pid)-ord('A')
         for j in range(4):
             lbP[rank][j].grid(row=i+1,column=j)
         bar[rank].grid(row=i+1,column=4,pady=28)
 
-def FCFS(): #先来先服务
-    pos=ord(readyList[0].pid)-ord('A')
-    if(readyList[0].runTime>=readyList[0].serveTime): #当前进程已经完成
-        varLbP[pos][1].set(readyList[0].arrTime+readyList[0].runTime+readyList[0].waitTime)
-        varLbP[pos][2].set(readyList[0].runTime+readyList[0].waitTime)
-        varLbP[pos][3].set(float(readyList[0].runTime+readyList[0].waitTime)/float(readyList[0].serveTime))
-        readyList.remove(readyList[0]) 
+def sortProcessbyArrTime(): 
+    for i in range(len(readyList)-1):
+        for j in range(i+1,len(readyList)):
+            if readyList[i].arrTime>readyList[j].arrTime:
+                readyList[i],readyList[j]=readyList[j],readyList[i]
 
-        if(len(readyList)>=1): #当前周期下还应运行一个新的进程
-            readyList[0].running()
-            bar[ord(readyList[0].pid)-ord('A')].step(amount=100.0/readyList[0].serveTime-0.001) #修改进度条
-    else:
-        readyList[0].running()
-        bar[pos].step(amount=100.0/readyList[0].serveTime-0.001) #修改进度条
-    window.update()
-    for i in range(1,len(readyList)): #修改其他进程状态
-        if(readyList[i].arrTime<=CLOCK): #若当前时钟周期大于等于进程到达时间，即为等待状态
+
+def sortProcessbyServeTime(begin,clock):
+    t=findBorder(clock)
+    for i in range(begin,t-1):
+        for j in range(i+1,t):
+            if readyList[i].serveTime>readyList[j].serveTime:
+                readyList[i],readyList[j]=readyList[j],readyList[i]
+
+
+def sortProcessbyPriority(begin,clock):
+    #print('CLOCK:',clock)
+    t=findBorder(clock)
+    for i in range(t):
+        readyList[i].priority=float(readyList[i].waitTime+readyList[i].serveTime)/readyList[i].serveTime
+        #print(readyList[i].pid,readyList[i].priority)
+    for i in range(begin,t-1):
+        for j in range(i+1,t):
+            if readyList[i].priority<readyList[j].priority:
+                readyList[i],readyList[j]=readyList[j],readyList[i]
+
+def showInfo(now): 
+    pos=ord(readyList[now].pid)-ord('A')
+    varLbP[pos][1].set(readyList[now].arrTime+readyList[now].runTime+readyList[now].waitTime)
+    varLbP[pos][2].set(readyList[now].runTime+readyList[now].waitTime)
+    varLbP[pos][3].set(float(readyList[now].runTime+readyList[now].waitTime)/float(readyList[now].serveTime))
+
+
+def runProcess(now):
+    global LASTRUNSTATE
+    LASTRUNSTATE=1
+    readyList[now].running() #当前进程执行
+    pos=ord(readyList[now].pid)-ord('A')
+    bar[pos].step(amount=100.0/readyList[now].serveTime-0.001) #修改进度条
+    window.update() #更新窗口
+
+def waitProcess(now,clock):
+    for i in range(findBorder(clock)): #修改其他进程状态
+        if(i!=now): #若当前时钟周期大于等于进程到达时间且不为当前正在执行的进程，即为等待状态
             readyList[i].waiting()
 
-    
-def SJF(): #最短进程优先
-    pass
-def RR():
-    pass
-def HRN():   
-    pass
 
+def FCFS(clock): #先来先服务
+    if(findBorder(clock)>=1):
+        runProcess(0)        
+        waitProcess(0,clock)
+    if(readyList[0].runTime>=readyList[0].serveTime): #当前进程已经完成
+        showInfo(0)
+        readyList.remove(readyList[0]) #移除当前进程
+
+
+    
+def SJF(clock): #最短进程优先
+    global LASTRUNSTATE
+    if(findBorder(clock)>=1):
+        if(not LASTRUNSTATE): #如果上个周期未执行，则应重新排序，否则上个周期执行了，就无需排序（只会继续当前执行的内容或执行完后已经排好序了）
+            sortProcessbyServeTime(0,clock)
+        runProcess(0)        
+        waitProcess(0,clock)
+    else: #当前没有可以执行的，即空闲状态
+        LASTRUNSTATE=0
+    if(readyList[0].runTime>=readyList[0].serveTime): #当前进程已经完成
+        showInfo(0)
+        readyList.remove(readyList[0]) #移除当前进程
+        sortProcessbyServeTime(0,clock+1) #当前周期下已经全部执行完毕，再次进行排序应按照下一周期进行，因此clock+1
+
+def updateQueue(clock): #更新待执行队列
+    t=findBorder(clock)
+    for i in range(t):
+        if readyList[i].priority==1:
+            RRList.append(readyList[i].pid)
+            readyList[i].priority=0 #利用进程属性区分进程是否已被添加至队列，0代表已添加
+
+def delList():
+    count=0
+    for i in range(PNUM):
+        if readyList[i].priority==2:
+            count+=1
+    if count==5:  #应删除
+        readyList.clear()
+def RR(clock): #轮转时间片，与其他三个不同，新开了一个队列用于保存原有进程
+    updateQueue(clock)
+    if(len(RRList)):
+        pos=ord(RRList[0])-ord('A')
+        runProcess(pos)        
+        print(clock,readyList[pos].pid)
+
+        for i in range(len(RRList)): #修改其他进程状态
+            if(ord(RRList[i])-ord('A')!=pos): #若当前时钟周期大于等于进程到达时间且不为当前正在执行的进程，即为等待状态
+                readyList[ord(RRList[i])-ord('A')].waiting()
+
+        updateQueue(clock+1)
+
+        if(readyList[ord(RRList[0])-ord('A')].runTime<readyList[ord(RRList[0])-ord('A')].serveTime): #当前进程未完成
+            t=RRList.pop(0)
+            RRList.append(t)
+        else:
+            showInfo(ord(RRList[0])-ord('A'))
+            readyList[ord(RRList[0])-ord('A')].priority=2 #将优先级设置为2，用于最后的删除
+            RRList.pop(0) #移除当前进程
+
+    delList() #检测是否应该删除所有已执行过的进程队列
+
+
+
+def HRN(clock):   #高响应权
+    global LASTRUNSTATE
+    if(findBorder(clock)>=1):
+        if(not LASTRUNSTATE): #如果上个周期未执行，则应重新排序，否则上个周期执行了，就无需排序（只会继续当前执行的内容或执行完后已经排好序了）
+            sortProcessbyPriority(0,clock)
+        runProcess(0)        
+        waitProcess(0,clock)
+    else: #当前没有可以执行的，即空闲状态
+        LASTRUNSTATE=0
+    if(readyList[0].runTime>=readyList[0].serveTime): #当前进程已经完成
+        showInfo(0)
+        readyList.remove(readyList[0]) #移除当前进程
+        sortProcessbyPriority(0,clock+1) #当前周期下已经全部执行完毕，再次进行排序应按照下一周期进行，因此clock+1
+
+def run():
+    global CLOCK
+    if(selected.get()==1):
+        FCFS(CLOCK)
+    elif(selected.get()==2):
+        SJF(CLOCK)
+    elif(selected.get()==3):
+        RR(CLOCK)
+    else:
+        HRN(CLOCK)
+    CLOCK+=1
 
 
 def allRun(): #执行到底
+    global STATE
+    STATE=1
     cpuTime=time.time()
-    while len(readyList)>0:
-        if(time.time()-cpuTime>=1/RATE):
-            if(selected.get()==1):
-                FCFS()
-            elif(selected.get()==2):
-                SJF()
-            elif(selected.get()==3):
-                RR()
-            else:
-                HRN()
+    while STATE and len(readyList)>0:
+        if(time.time()-cpuTime>=1/RATE.get()):
+            run()
             cpuTime=time.time()
-            global CLOCK
-            CLOCK+=1
-            
-def stop():
-    pass
-def stepRun():
-    pass
+    if(len(readyList)==0):
+        messagebox.showinfo(title='提示',message='执行完毕!')
 
+def stop():
+    global STATE
+    STATE=0
+
+def stepRun():
+    if len(readyList)>0:
+        run()
+    else:
+        messagebox.showinfo(title='提示',message='执行完毕!')
 
 def help_message():
     messagebox.showinfo(
@@ -123,13 +243,9 @@ window.title('处理器调度')
 
 window.geometry('1080x720') # 设定窗口的大小
 
+RATE=tk.IntVar() #速率设置
+RATE.set(3)
 
-'''
-var = tk.StringVar()
-var.set('Please enter!')
-l = tk.Label(window, textvariable=var, font=('Arial', 12), width=30, height=4) # 在图形界面上设定标签
-l.grid(row=0, column=0) # 放置标签
-'''
 #放置三个框架，分别为输入、结果展示、控制模块
 frmInput=tk.LabelFrame(window,width=300,height=420)
 frmInput.place(x=780,y=0)
@@ -152,9 +268,12 @@ for i in range(PNUM):
 btnConfirm=tk.Button(frmInput, text="输入完毕",command=init)
 btnConfirm.grid(row=PNUM+1,column=2)
 
+#初始化数据
 var=[] #输入进程的信息
 spin=[] #Spinbox列表，用于存储SpinBox控件，共五个
+#initList=[[0,4],[1,3],[2,5],[3,2],[4,4]]
 initList=[[0,3],[2,6],[4,4],[6,5],[8,2]]
+#initList=[[5,3],[2,6],[4,6],[6,5],[8,2]]
 #设置输入模块，五个进程分别对应五个栏目，10个变量
 for i in range(PNUM):
     varr=[] #存储内层变量，共两个，分别为到达时间与服务时间
@@ -167,25 +286,16 @@ for i in range(PNUM):
     var.append(varr)
     spin.append(spinn)
 
-readyList=[]
-
-
 
 # 设置算法选择栏
 selected = tk.IntVar()
+selected.set(1)
 l=['FCFS','SJF','RR','HRN']
 for i in range(1,5):
     tk.Radiobutton(frmControl, text=l[i-1], value=i, variable=selected).place(relx=0.4, rely=0.1*i)
-'''
-rad1 = tk.Radiobutton(frmControl, text="FCFS", value=1, variable=selected)
-rad2 = tk.Radiobutton(frmControl, text="SJF", value=2, variable=selected)
-rad3 = tk.Radiobutton(frmControl, text="RR", value=3, variable=selected)
-rad4 = tk.Radiobutton(frmControl, text="HRN", value=4, variable=selected)
-rad1.place(relx=0.4, rely=0.1)
-rad2.place(relx=0.4, rely=0.2)
-rad3.place(relx=0.4, rely=0.3)
-rad4.place(relx=0.4, rely=0.4)
-'''
+
+rateLabel=tk.Label(frmControl, text="速率",font=('Songti', 12)).place(relx=0.3,rely=0.85)
+rate = tk.Spinbox(frmControl, from_=0, to=100, width=7,textvariable=RATE).place(relx=0.5,rely=0.85)#设置速率选择栏
 
 #设置功能选择栏
 btnAllRun = tk.Button(frmControl, text="执行到底",command=lambda:allRun())
@@ -197,15 +307,7 @@ btnStepRun.place(relx=0.6, rely=0.5)
 btnStop.place(relx=0.2, rely=0.7)
 btnReset.place(relx=0.6, rely=0.7)
 
-
-
-
-
 #渲染结果展示栏
-'''
-style = ttk.Style()
-style.theme_use('default')
-'''
 lbPid=tk.Label(frmResult, text='进程号',font=('Songti', 12))
 lbPid.grid(row=0,column=0,padx=35)
 lbCom=tk.Label(frmResult, text='完成时间',font=('Songti', 12))
