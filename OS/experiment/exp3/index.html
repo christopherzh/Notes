@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>动态高优先权优先调度算法</title>
+    <script type="text/javascript" src="pg.js"></script>
+    <style type="text/css">
+        progress{
+            width: 800px;
+            height: 60px;
+        }
+        #ps{
+            text-align: center;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+<h1 style="background-color: aqua; text-align: center">动态高优先权优先调度算法</h1>
+<div id="ps"></div>
+</body>
+<script>
+    // 开始时间
+    var start = new Date().getTime();
+    //作业列表
+    var objList = [new PgObj('A',1,6,1), new PgObj('B',4,5,2),new PgObj('C',2,3,3), new PgObj('D',8,2,4)]
+    // 到达作业列表
+    var ARRIVED_JOB = [];
+    // 运行及运行过的作业列表
+    var runList = [];
+    // 保证一个作业运行时其他作业不可运行
+    var flag = 1;
+    // 定时器监控到达的作业放入到达作业列表
+    setInterval(function () {
+
+        var delta = (new Date().getTime() - start)/1000;
+        // 由于遍历的同时删除作业会导致无法遍历完整 采用倒序遍历
+        for(var i=objList.length-1; i>=0; i--){
+            if (objList[i].arrivedtime < delta){
+                ARRIVED_JOB.push(objList[i]);
+                objList.splice(i, 1);
+            }
+        }
+    },100);
+
+    // 排序 对到达作业有运行时间 按短作业优先的方式排序
+    function sortruntime() {
+        ARRIVED_JOB.sort(function sortNumber(obj1,obj2) {
+            return obj1.runtime - obj2.runtime;
+        });
+    }
+
+    // 从运行列表把刚添加进来的作业运行
+    function SchedulerJob() {
+        runList[runList.length-1].createPro();
+    }
+
+    // 主函数控制整个运行
+    setInterval(function () {
+        sortruntime();
+        if (ARRIVED_JOB.length != 0 && flag==1){
+            flag = 0;
+            runList.push(ARRIVED_JOB[0]);
+            SchedulerJob();
+            ARRIVED_JOB.splice(0,1);
+        }
+    },10);
+
+</script>
+</html>
