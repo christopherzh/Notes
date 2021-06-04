@@ -87,7 +87,7 @@ function addTable(label) {
 
 
 function draw() {
-  window.onload = function () {
+
     var pt1 = new Array(LEN + 1);
     var pt2 = new Array(LEN + 1);
 
@@ -159,5 +159,6 @@ function draw() {
 
 
   }
-}
+window.onload = function () {
 draw()
+}
