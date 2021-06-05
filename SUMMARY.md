@@ -7,7 +7,7 @@
 
 ## OS
 * [Os](OS/os.md)
-
+* [复习笔记](OS/复习笔记.md)
 ## Linux
 * [Linux Kernel Development](Linux/linux_kernel_development.md)
 
