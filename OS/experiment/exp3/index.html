@@ -1,0 +1,41 @@
+<!doctype HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    选择内存分配算法<br>
+    <title>选择内存分配算法</title>
+    <script>
+        function click1() {
+            var ch = document.getElementsByName("choice");
+            var url 
+            for(var i=0;i<4;i++){
+                if(ch[i].checked)
+                    url="exp3.html?"+i;
+                    location.href=url;
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div>
+        <form>
+            首次适应算法
+            <input type="radio" checked="checked" name="choice" value="firstFit" />
+            <br>
+            循环首次适应算法
+            <input type="radio" name="choice" value="nextFit" />
+            <br>
+            最佳适应算法
+            <input type="radio" name="choice" value="bestFit" />
+            <br>
+            最坏适应算法
+            <input type="radio" name="choice" value="worstFit" />
+            <br>
+            <input type="button" onclick="click1()" value="选择" />
+        </form>
+    </div>
+</body>
+
+</html>

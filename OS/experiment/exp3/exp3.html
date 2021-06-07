@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+<meta charset="utf-8">
+
+<head>
+  <script src="canvasjs.min.js"></script>
+  <script src="jquery-3.6.0.min.js"></script>
+  <script src="exp3.js"></script>
+  <table border="2" bgcolor="#FFFAFA">
+    <thead id="thead">
+    </thead>
+    <tbody id="tbody">
+    </tbody>
+  </table>
+  <p></p>
+</head>
+
+
+<body>
+
+  <form action="form_action.asp" method="get">
+    First name: <input type="text" name="fname" />
+    Last name: <input type="text" name="lname" />
+    <input type="submit" value="Submit" />
+  </form>
+
+  <form action="/demo/demo_form.asp">
+    数量（1 到 5 之间）：
+    <input type="number" name="quantity" min="1" max="5">
+    <input type="submit">
+  </form>
+
+
+  <form action="exp3.html" method="post">
+    <input type="text" name="wenben" id="info">
+  </form>
+  <button id="bt" onclick="test();">点击测试</button>
+
+
+  <div id="container">
+
+    <div id="menu" style="max-height:1000px;max-width:1000px;float:left;">
+      <table border="1" bgcolor="#FFFAFA">
+        <thead>
+          <tr>
+            <th> SSTF 响应 顺序 </th>
+            <th>移动距离</th>
+          </tr>
+        </thead>
+        <tbody id="tbody1">
+        </tbody>
+      </table>
+      <table border="1" bgcolor="#FFFAFA">
+        <thead>
+          <tr>
+            <th>SCAN响应顺序</th>
+            <th>移动距离</th>
+          </tr>
+        </thead>
+        <tbody id="tbody2">
+        </tbody>
+      </table>
+      <p></p>
+      <button id="btn1" style="width:190px;height:30px" onclick="javascript:draw()">生成随机值并重新模拟</button>
+
+    </div>
+
+    <div id="SSTFchartContainer" style="height: 300px; max-width: 920px; margin: 0px auto;">
+    </div>
+    <p></p>
+    <div id="SCANchartContainer" style="height: 300px; max-width: 920px; margin: 0px auto;">
+    </div>
+    <div id="footer" style="clear:both;text-align:center;">
+      © 电计1806张子航
+    </div>
+</body>
+
+</html>
