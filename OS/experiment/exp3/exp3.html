@@ -6,62 +6,57 @@
   <script src="canvasjs.min.js"></script>
   <script src="jquery-3.6.0.min.js"></script>
   <script src="exp3.js"></script>
-  <table border="2" bgcolor="#FFFAFA">
-    <thead id="thead">
-    </thead>
-    <tbody id="tbody">
-    </tbody>
-  </table>
-  <p></p>
+
 </head>
 
 
 <body>
-
-  <form action="form_action.asp" method="get">
-    First name: <input type="text" name="fname" />
-    Last name: <input type="text" name="lname" />
-    <input type="submit" value="Submit" />
+  <form >
+    作业号（最小为0）  <input type="number"  id="pid" min='0'>
+    <br>
+    请求空间（最小为1）<input type="number"  id="request" min='1'>
   </form>
-
-  <form action="/demo/demo_form.asp">
-    数量（1 到 5 之间）：
-    <input type="number" name="quantity" min="1" max="5">
-    <input type="submit">
+  <button id="request" onclick="getRequest();">发起申请空间请求</button>
+  <br>  <br>  <br>
+  <form >
+    释放的作业号（最小为0）  <input type="number"  id="freepid" min='0'>
   </form>
-
-
-  <form action="exp3.html" method="post">
-    <input type="text" name="wenben" id="info">
-  </form>
-  <button id="bt" onclick="test();">点击测试</button>
-
+  <button id="free" onclick="getFree();">发起申请释放空间请求</button>
 
   <div id="container">
 
     <div id="menu" style="max-height:1000px;max-width:1000px;float:left;">
+      <h4>空闲分区表:</h4>
       <table border="1" bgcolor="#FFFAFA">
         <thead>
           <tr>
-            <th> SSTF 响应 顺序 </th>
-            <th>移动距离</th>
+            <th>始址</th>
+            <th>长度</th>
+            <th>标志</th>
           </tr>
         </thead>
-        <tbody id="tbody1">
+        <tbody id="tbodyFree">
         </tbody>
       </table>
-      <table border="1" bgcolor="#FFFAFA">
+      <br>
+      <br>
+      <br>
+      <h4>已分配表:</h4>
+      <table border="1" bgcolor="#FFFAFA" >
         <thead>
           <tr>
-            <th>SCAN响应顺序</th>
-            <th>移动距离</th>
+            <th>始址</th>
+            <th>长度</th>
+            <th>标志</th>
           </tr>
         </thead>
-        <tbody id="tbody2">
+        <tbody id="tbodyAlloc">
         </tbody>
       </table>
       <p></p>
-      <button id="btn1" style="width:190px;height:30px" onclick="javascript:draw()">生成随机值并重新模拟</button>
+
+
+      <button id="btn1" style="width:190px;height:30px" onclick="draw()">生成随机值并重新模拟</button>
 
     </div>
 
