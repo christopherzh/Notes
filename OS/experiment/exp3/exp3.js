@@ -25,24 +25,26 @@ function descCompare(property) {
   }
 }
 
-function changeFreeTable() {
+function changeFreeTable(id,request,pos) {
   var tempAddr
-  if (FreeTable[i].len > request) { //空闲分区长度大于请求
-    FreeTable[i].len -= request //修改空闲分区剩余长度
-    tempAddr = FreeTable[i].beginAddr //保存修改前的地址
-    FreeTable[i].beginAddr += request //修改该区始址
+  if (FreeTable[pos].len > request) { //空闲分区长度大于请求
+    FreeTable[pos].len -= request //修改空闲分区剩余长度
+    tempAddr = FreeTable[pos].beginAddr //保存修改前的地址
+    FreeTable[pos].beginAddr += request //修改该区始址
   }
   else { //空闲分区等于请求
     tempAddr = FreeTable[i].beginAddr //保存修改前的地址
     FreeTable.splice(i, 1); //直接删除空闲分区
   }
   AllocTable[AllocTable.length] = new Table(tempAddr, request, id)
+  AllocTable.sort(ascCompare('beginAddr')) //将已分配表按始址排序，便于查看
+  alert('yes')
 }
 
 function firstFit(id, request) {
   for (var i = 0; i < FreeTable.length; i++) {
     if (FreeTable[i].len >= request && FreeTable[i].sign == -1) { //找到空闲分区
-      changeFreeTable()
+      changeFreeTable(id,request,i)
       return FreeTable[i].beginAddr
     }
   }
@@ -52,7 +54,7 @@ function firstFit(id, request) {
 function nextFit(id, request) {
   for (var i = NowPoint, j = 0; j < FreeTable.length; i = (i + 1) % FreeTable.length, j++) {
     if (FreeTable[i].len >= request && FreeTable[i].sign == -1) { //找到空闲分区
-      changeFreeTable()
+      changeFreeTable(id,request,i)
       NowPoint = (NowPoint + j) % FreeTable.length
       return FreeTable[i].beginAddr
     }
@@ -61,10 +63,10 @@ function nextFit(id, request) {
 
 }
 function bestFit(id, request) {
-  FreeTable.sort(ascCompare(len))
+  FreeTable.sort(ascCompare('len'))
   for (var i = 0; i < FreeTable.length; i++) {
     if (FreeTable[i].len >= request && FreeTable[i].sign == -1) { //找到空闲分区
-      changeFreeTable()
+      changeFreeTable(id,request,i)
       return FreeTable[i].beginAddr
     }
   }
@@ -73,10 +75,10 @@ function bestFit(id, request) {
 
 
 function worstFit(id, request) {
-  FreeTable.sort(descCompare(len))
+  FreeTable.sort(descCompare('len'))
   for (var i = 0; i < FreeTable.length; i++) {
     if (FreeTable[i].len >= request && FreeTable[i].sign == -1) { //找到空闲分区
-      changeFreeTable()
+      changeFreeTable(id,request,i)
       return FreeTable[i].beginAddr
     }
   }
@@ -138,17 +140,17 @@ function retrieve(id) {    //内存回收算法
   else {  //无上下临近区，向空闲表插入该项
     FreeTable.splice(FreeTable.length, 0, new Table(begin, end - begin, -1)) //为方便，直接在表最后插入该项
     if (Choice == 0 || Choice == 1) {
-      FreeTable.sort(ascCompare(beginAddr)) //如果算法为首次和循环首次适应，则应该重新排序，因为新加入了一个未知表项
+      FreeTable.sort(ascCompare('beginAddr')) //如果算法为首次和循环首次适应，则应该重新排序，因为新加入了一个未知表项
     }
 
   }
 
   //若分配算法为最佳或最坏适应算法，应重新进行排序
   if (Choice == 2) {
-    FreeTable.sort(ascCompare(len))
+    FreeTable.sort(ascCompare('len'))
   }
   else if (Choice == 3) {
-    FreeTable.sort(descCompare(len))
+    FreeTable.sort(descCompare('len'))
   }
 
   draw()
@@ -162,9 +164,11 @@ function addTable(label, table) {
     tableData += "<td>" + table[i].beginAddr + "</td>"
     tableData += "<td>" + table[i].len + "</td>"
     if (label == "#tbodyFree") {
+      tableData += "<td>" + table[i].sign + "</td>"
+    }
+    else{
       tableData += "<td>J" + table[i].sign + "</td>"
     }
-    tableData += "<td>" + table[i].sign + "</td>"
     tableData += "</tr>"
   }
   $(label).html(tableData)
@@ -172,7 +176,6 @@ function addTable(label, table) {
 
 function draw() { //给出已分配表与未分配表
   addTable("#tbodyFree", FreeTable)
-  AllocTable.sort(ascCompare(beginAddr)) //将已分配表按始址排序，便于查看
   addTable("#tbodyAlloc", AllocTable)
 }
 
