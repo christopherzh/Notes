@@ -3,78 +3,180 @@
 //（2）	删除奇数.txt（1.txt、3.txt、……、49.txt）文件
 //（3）	新创建5个文件（A.txt、B.txt、C.txt、D.txt、E.txt），大小为：7k、5k、2k、9k、3.5k，按照与（1）相同的算法存储到模拟磁盘中
 //（4）	给出文件A.txt、B.txt、C.txt、D.txt、E.txt的盘块存储状态和所有空闲区块的状态。
-class Table { //空闲块表
-    constructor(num, blockAddr, blockSize) {
-        this.num = num
-        this.blockAddr = blockAddr
-        this.blockSize = blockSize
+
+class Table { //
+    constructor(beginAddr, len, sign) {
+        this.beginAddr = beginAddr
+        this.len = len
+        this.sign = sign
     }
 }
 
-class FCB { //文件控制表
-    constructor(name, inode) {
-        this.name = name
-        this.imode = inode
-    }
-}
-
-var MaxBlockNum = 500    //磁盘块号
-var MaxBlockSize=2
-var FCBTable = new Array()  //文件目录，二维
-var IndexNodeTable = new Array(60) //索引结点表
+var MAX = 500    //内存容量,单位KB
+var AllocTable = new Array()  //已分区表，二维
 var FreeTable = new Array()   //空闲分区表，二维
-FreeTable[0] = new Table(1, 1, MaxBlockNum)
+FreeTable[0] = new Table(1, MAX, 'Null')
+var FileNameList = ['A', 'B', 'C', 'D', 'E']
+var FileSizeList = [7, 5, 2, 9, 3.5]
 
-function createFile(requestSize,fileName) {
-    var t=FCBTable.length
-    FCBTable[t]=new FCB(fileName,t) //创建FCB
-    IndexNodeTable[t]=new Array() //创建inode
-    var needBlockNum=Math.ceil(requestSize/MaxBlockSize) 
-    var posInFreeTable=0
-    //进行分配
-    while(needBlockNum>0){
-        if(posInFreeTable<=FreeTable.length){
-            while(FreeTable[posInFreeTable].blockSize>0){
-                FreeTable[posInFreeTable].blockSize--
-                needBlockNum--
-                IndexNodeTable[t].[IndexNodeTable[t].length]=FreeTable[posInFreeTable].blockAddr
-                FreeTable[posInFreeTable].blockAddr++
+function Compare(property) { //首先按照主键升序排序，若相同则按次键升序排列
+    return function (obj1, obj2) {
+        return obj1[property] - obj2[property]
+    }
+}
 
+
+function changeFreeTable(fileName, request, pos) {
+    var tempAddr
+    if (FreeTable[pos].len > request) { //空闲盘块长度大于请求
+        FreeTable[pos].len -= request //修改空闲盘块剩余长度
+        tempAddr = FreeTable[pos].beginAddr //保存修改前的地址
+        FreeTable[pos].beginAddr += request //修改该区始址
+    }
+    else { //空闲盘块等于请求
+        tempAddr = FreeTable[pos].beginAddr //保存修改前的地址
+        FreeTable.splice(pos, 1); //直接删除空闲分区
+    }
+
+    AllocTable[AllocTable.length] = new Table(tempAddr, request, fileName)
+    AllocTable.sort(Compare('beginAddr')) //将已分配表按始址排序，便于查看
+    //alert("文件创建成功")
+}
+
+function searchUpDown_ChangeFreeTable(begin, end) {
+    var up = -1, down = -1 //指示是否存在上下分区
+    for (var i = 0; i < FreeTable.length; i++) { //寻找上下临近区
+        if (FreeTable[i].beginAddr + FreeTable[i].len == begin) {
+            up = i
+        }
+        else if (end == FreeTable[i].beginAddr) {
+            down = i
+        }
+    }
+
+    if (up != -1 && down != -1) { //有上下空闲区，修改上空闲项长度，并删去下空闲表
+        FreeTable[up].len += (end - begin) + FreeTable[down].len
+        FreeTable.splice(down, 1)
+    }
+    else if (up != -1) { //有上空闲区，修改空闲项长度
+        FreeTable[up].len += (end - begin)
+    }
+    else if (down != -1) { //有下空闲区，修改空闲项始址与长度
+        FreeTable[down].len += (end - begin)
+        FreeTable[down].beginAddr = begin
+    }
+    else {  //无上下临近区，向空闲表插入该项
+        for (i = 0; i < FreeTable.length; i++) { //直接寻找应插入的位置
+            var i
+            if (FreeTable[i].beginAddr > begin) {
+                break
             }
-            FreeTable.splice(posInFreeTable, 1)
-            posInFreeTable++
         }
-        else{
-            alert('空间不足，无法分配！')
+        FreeTable.splice(i, 0, new Table(begin, end - begin, -1))
+    }
+    //alert("已释放文件占用的空间")
+}
+
+function createFile(request, fileName) {
+    for (var i = 0; i < FreeTable.length; i++) {
+        if (FreeTable[i].len >= request && FreeTable[i].sign == 'Null') { //找到空闲分区
+            changeFreeTable(fileName, request, i)
+            return FreeTable[i].beginAddr
         }
     }
+    return -1
 }
 
-function deleteFile(fileName) {
-
-}
-
-function stepOne() {
-    for(var i=0;i<50;i++){
-        var size=Math.floor(2 + Math.random() * 8)
-        createFile(size,(i+1)+'.txt')
+function deleteFile(fileName) {    //块回收算法  
+    for (var i = 0; i < AllocTable.length; i++) { //找到应删去的文件，处理已分配表
+        if (AllocTable[i].sign == fileName) {
+            // 保存删除的空闲区块
+            var begin = AllocTable[i].beginAddr
+            var end = AllocTable[i].beginAddr + AllocTable[i].len
+            AllocTable.splice(i, 1) //从已分配表中删除该项
+            searchUpDown_ChangeFreeTable(begin, end) //根据规则修改空闲盘块表
+            return 1
+        }
     }
+    alert("不存在该文件!")
+    return -1
 }
 
-function stepTwo() {
-    for(var i=0;i<50;i+=2){
-        deleteFile((i+1)+'.txt')
+
+function addFreeTable(label, table) {
+    var tableData = new String();
+    for (var i = 0; i < table.length; i++) {
+        var num = i + 1
+        tableData += "<tr>"
+        tableData += "<td>" + num + "</td>"
+        tableData += "<td>" + table[i].beginAddr + "</td>"
+        tableData += "<td>" + table[i].len + "</td>"
+        tableData += "</tr>"
     }
+    $(label).html(tableData)
 }
 
-function stepThree() {
-    var FileNameList=['A','B','C','D','E']
-    var FileSizeList=[7,5,2,9,3.5]
-    for(var i=0;i<FileNameList.length;i++){
-        createFile(FileSizeList[i],FileNameList[i]+'.txt')
+function addTable(label, table) {
+    var tableData = new String();
+    for (var i = 0; i < FileNameList.length; i++) {
+        var name = FileNameList[i] + '.txt'
+        var j = 0
+        for (var j = 0; j < table.length; j++) {
+            if (table[j].sign == name) {
+                tableData += "<tr>"
+                tableData += "<td>" + name + "</td>"
+                tableData += "<td>" + table[j].beginAddr + "</td>"
+                tableData += "<td>" + table[j].len + "</td>"
+                tableData += "</tr>"
+                break
+            }
+        }
     }
+    $(label).html(tableData)
 }
 
-function stepFour() {
+function draw() { //给出已分配表与未分配表
+    addTable("#tbodyAlloc", AllocTable)
+    addFreeTable("#tbodyFree", FreeTable)
+}
 
+function stepOne() { //第一步
+    for (var i = 0; i < 50; i++) {
+        var size = Math.floor(2 + Math.random() * 8)
+        var blocksize=Math.ceil(size/2)
+        var beginAddr = createFile(blocksize, (i + 1) + '.txt')
+        if (beginAddr == -1) {
+            alert('建立文件失败，无可用存储块！')
+            break
+        }
+    }
+    //alert('done')
+}
+
+function stepTwo() { //第二步
+    for (var i = 0; i < 50; i += 2) {
+        deleteFile((i + 1) + '.txt')
+    }
+    //alert('done')
+}
+
+function stepThree() { //第三步
+    for (var i = 0; i < FileNameList.length; i++) {
+        var blocksize=Math.ceil( FileSizeList[i]/2)
+        createFile(blocksize, FileNameList[i] + '.txt')
+    }
+    //alert('done')
+}
+
+function stepFour() { //第四步
+    draw()
+    //alert('done')
+}
+
+function runAll() { //全部运行
+    stepOne()
+    stepTwo()
+    stepThree()
+    stepFour()
+    alert('all done!')
 }

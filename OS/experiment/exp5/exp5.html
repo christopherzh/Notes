@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<meta charset="utf-8">
+
+<head>
+  <script src="canvasjs.min.js"></script>
+  <script src="jquery-3.6.0.min.js"></script>
+  <script src="exp5.js"></script>
+
+</head>
+
+
+<body>
+  <button id="runall" onclick="runAll();">执行全部</button>
+
+  <div id="container">
+
+    <div id="menu" style="max-height:1000px;max-width:1000px;float:left;">
+      <h4>空闲块表:</h4>
+      <table border="1" bgcolor="#FFFAFA">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>第一空闲块号</th>
+            <th>空闲块数</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyFree">
+        </tbody>
+      </table>
+      <br>
+      <br>
+      <br>
+      <h4>已分配情况表:</h4>
+      <table border="1" bgcolor="#FFFAFA" >
+        <thead>
+          <tr>
+            <th>文件名</th>
+            <th>文件存储第一块号</th>
+            <th>文件存储块总数</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyAlloc">
+        </tbody>
+      </table>
+      <p></p>
+
+
+
+    </div>
+
+    <div id="footer" style="clear:both;text-align:center;">
+      © 电计1806张子航
+    </div>
+</body>
+
+</html>
