@@ -11,12 +11,18 @@ function randomGen() {
     startList[i] = Math.floor(Math.random() * 300);
   }
 }
+function getNum(){
+  var url = location.search; //这一条语句获取了包括问号开始到参数的最后，不包括前面的路径
+  var params = url.substr(1);//去掉问号
+  return Number(params)
+}
+
 function init() {
   nowPos = startPos;
   for (var i = 0; i < startList.length; i++) {
     requestList[i] = startList[i];
   }
-  moveList = new Array(10);
+  moveList = new Array(LEN+1);
   for (var i = 0; i < moveLength.length; i++) {
     moveLength[i] = 10000;
   }
@@ -45,7 +51,7 @@ function SCAN() {
 
     requestList.splice(minPos, 1);
   }
-  moveList[9] = nowPos;
+  moveList[LEN] = nowPos;
 
 }
 function SSTF() {
@@ -115,6 +121,7 @@ function draw() {
       });
     chart1.render();
     addTable("#tbody1");
+
     init();
     SCAN();
     for (var i = 0; i < pt1.length; i++) {
@@ -159,6 +166,13 @@ function draw() {
 
 
   }
+
+
 window.onload = function () {
+LEN=getNum()
+requestList = new Array(LEN);
+moveLength = new Array(LEN);
+startList = new Array(LEN);
+moveList = new Array(LEN + 1);
 draw()
 }
