@@ -98,7 +98,7 @@ function deleteFile(fileName) {    //块回收算法
             return 1
         }
     }
-    alert("不存在该文件!")
+    //alert("不存在该文件!")
     return -1
 }
 
@@ -146,10 +146,11 @@ function stepOne() { //第一步
         var blocksize=Math.ceil(size/2)
         var beginAddr = createFile(blocksize, (i + 1) + '.txt')
         if (beginAddr == -1) {
-            alert('建立文件失败，无可用存储块！')
+            //alert('建立文件失败，无可用存储块！')
             break
         }
     }
+    //draw()
     //alert('done')
 }
 
@@ -157,6 +158,7 @@ function stepTwo() { //第二步
     for (var i = 0; i < 50; i += 2) {
         deleteFile((i + 1) + '.txt')
     }
+    //draw()
     //alert('done')
 }
 
@@ -165,6 +167,7 @@ function stepThree() { //第三步
         var blocksize=Math.ceil( FileSizeList[i]/2)
         createFile(blocksize, FileNameList[i] + '.txt')
     }
+    //draw()
     //alert('done')
 }
 
@@ -178,5 +181,5 @@ function runAll() { //全部运行
     stepTwo()
     stepThree()
     stepFour()
-    alert('all done!')
+    alert('执行完毕!')
 }

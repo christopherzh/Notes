@@ -11,46 +11,51 @@
 
 
 <body>
-  <button id="runall" onclick="runAll();">执行全部</button>
+  <div style="max-height:1000px;max-width:1000px;float:left;">
+  <h4>空闲块表:</h4>
+  <table border="1" bgcolor="#FFFAFA">
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>第一空闲块号</th>
+        <th>空闲块数</th>
+      </tr>
+    </thead>
+    <tbody id="tbodyFree">
+    </tbody>
+  </table>
+</div>
+  <div  style="height: 300px; max-width: 920px; margin: 0px auto;float:center">
+    <button id="stepone" onclick="stepOne();">执行第一步</button>
+    <br><br>
+    <button id="steptwo" onclick="stepTwo();">执行第二步</button>
+    <br><br>
+    <button id="stepthree" onclick="stepThree();">执行第三步</button>
+    <br><br>
+    <button id="stepfour" onclick="stepFour();">执行第四步</button>
+    <br><br>
+    <button id="runall" onclick="runAll();">执行全部</button>
+    <br><br>
+  <h4>已分配情况表:</h4>
+  <table border="1" bgcolor="#FFFAFA">
+    <thead>
+      <tr>
+        <th>文件名</th>
+        <th>文件存储第一块号</th>
+        <th>文件存储块总数</th>
+      </tr>
+    </thead>
+    <tbody id="tbodyAlloc">
+    </tbody>
+  </table>
+   </div>
+  <p></p>
 
-  <div id="container">
-
-    <div id="menu" style="max-height:1000px;max-width:1000px;float:left;">
-      <h4>空闲块表:</h4>
-      <table border="1" bgcolor="#FFFAFA">
-        <thead>
-          <tr>
-            <th>序号</th>
-            <th>第一空闲块号</th>
-            <th>空闲块数</th>
-          </tr>
-        </thead>
-        <tbody id="tbodyFree">
-        </tbody>
-      </table>
-      <br>
-      <br>
-      <br>
-      <h4>已分配情况表:</h4>
-      <table border="1" bgcolor="#FFFAFA" >
-        <thead>
-          <tr>
-            <th>文件名</th>
-            <th>文件存储第一块号</th>
-            <th>文件存储块总数</th>
-          </tr>
-        </thead>
-        <tbody id="tbodyAlloc">
-        </tbody>
-      </table>
-      <p></p>
 
 
 
-    </div>
-
-    <div id="footer" style="clear:both;text-align:center;">
-      © 电计1806张子航
+  <div id="footer" style="clear:both;text-align:center;">
+    © 电计1806张子航
     </div>
 </body>
 

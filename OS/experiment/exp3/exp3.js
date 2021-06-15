@@ -222,4 +222,6 @@ function getChoice() {
 }
 
 Choice = getChoice()
-draw()
+window.onload= function (){
+  draw()
+}

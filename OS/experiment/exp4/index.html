@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+    选择内存分配算法<br>
     <title>选择内存分配算法</title>
     <script>
         function click1() {
@@ -19,27 +20,18 @@
 
 <body>
     <div align="center">
-        选择内存分配算法
-        <br>
-        <br>
-        <br>
         <form>
-            首次适应算法
+            手动输入数据
             <input type="radio" checked="checked" name="choice" value="firstFit" />
             <br>
-            <br>
-            循环首次适应算法
+            自动生成数据
             <input type="radio" name="choice" value="nextFit" />
-            <br>
             <br>
             最佳适应算法
             <input type="radio" name="choice" value="bestFit" />
             <br>
-            <br>
             最坏适应算法
             <input type="radio" name="choice" value="worstFit" />
-            <br>
-            <br>
             <br>
             <input type="button" onclick="click1()" value="选择" />
         </form>
@@ -47,3 +39,9 @@
 </body>
 
 </html>
+<form >
+    作业号（最小为0）  <input type="number"  id="pid" min='0'>
+    <br>
+    请求空间（最小为1）<input type="number"  id="request" min='1'>
+  </form>
+  <button id="request" onclick="getRequest();">发起申请空间请求</button>
