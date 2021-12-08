@@ -118,20 +118,15 @@ function addFreeTable(label, table) {
 
 function addTable(label, table) {
     var tableData = new String();
-    for (var i = 0; i < FileNameList.length; i++) {
-        var name = FileNameList[i] + '.txt'
-        var j = 0
         for (var j = 0; j < table.length; j++) {
-            if (table[j].sign == name) {
                 tableData += "<tr>"
-                tableData += "<td>" + name + "</td>"
+                tableData += "<td>" + table[j].sign + "</td>"
                 tableData += "<td>" + table[j].beginAddr + "</td>"
                 tableData += "<td>" + table[j].len + "</td>"
                 tableData += "</tr>"
-                break
-            }
+            
         }
-    }
+    
     $(label).html(tableData)
 }
 
@@ -150,7 +145,7 @@ function stepOne() { //第一步
             break
         }
     }
-    //draw()
+    draw()
     //alert('done')
 }
 
@@ -158,7 +153,7 @@ function stepTwo() { //第二步
     for (var i = 0; i < 50; i += 2) {
         deleteFile((i + 1) + '.txt')
     }
-    //draw()
+    draw()
     //alert('done')
 }
 
@@ -167,7 +162,7 @@ function stepThree() { //第三步
         var blocksize=Math.ceil( FileSizeList[i]/2)
         createFile(blocksize, FileNameList[i] + '.txt')
     }
-    //draw()
+    draw()
     //alert('done')
 }
 
