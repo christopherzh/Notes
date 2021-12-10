@@ -4,6 +4,7 @@
 
 ## DataBase
 * [Sql](Database/sql.md)
+* [Redis](Database/redis.md)
 
 ## OS
 * [Os](OS/os.md)

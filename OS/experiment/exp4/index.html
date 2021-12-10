@@ -1,0 +1,31 @@
+<!doctype HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>磁盘调度算法</title>
+    <script>
+        function click1() {
+            var ch = document.getElementById("len").value;
+            var url
+            url = "exp4.html?" + ch;
+            location.href = url;
+        }
+        
+    </script>
+</head>
+
+<body>
+    <div align="center">
+        <form>
+            自动生成数据
+            <input type="radio" checked="checked" name="choice" value="auto" />
+            <br><br>
+            数据个数
+            <input id="len" type="number" name="len" value=10> <input id="btn1" type="button" onclick="click1();" value="确认" />
+        </form>
+    </div>
+
+</body>
+
+</html>

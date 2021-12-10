@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<meta charset="utf-8">
+
+<head>
+  <script src="canvasjs.min.js"></script>
+  <script src="jquery-3.6.0.min.js"></script>
+  <script src="exp3.js"></script>
+
+</head>
+
+
+<body>
+  <div align="center">
+  <form>
+    作业号（最小为0） <input type="number" id="pid" min='0'>
+    <br>
+    请求空间（最小为1）<input type="number" id="request" min='1'>
+  </form>
+  <br>
+  <button id="request" onclick="getRequest();">发起申请空间请求</button>
+  <br> <br> <br>
+  <form>
+    释放的作业号（最小为0） <input type="number" id="freepid" min='0'>
+  </form>
+  <br>
+  <button id="free" onclick="getFree();">发起申请释放空间请求</button>
+
+  <br> <br>
+  <div>
+    <h4>空闲分区表:</h4>
+    <table border="1" bgcolor="#FFFAFA">
+      <thead>
+        <tr>
+          <th>始址</th>
+          <th>长度</th>
+          <th>标志</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyFree">
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h4>已分配表:</h4>
+    <table border="1" bgcolor="#FFFAFA">
+      <thead>
+        <tr>
+          <th>始址</th>
+          <th>长度</th>
+          <th>标志</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyAlloc">
+      </tbody>
+    </table>
+    <p></p>
+
+  </div>
+
+  </div>
+  <div id="footer" style="clear:both;text-align:center;">
+    © 电计1806张子航
+  </div>
+</body>
+
+</html>
