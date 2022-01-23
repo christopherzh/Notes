@@ -4,7 +4,7 @@
 yum install docker
 docker version
 ```
-## 启动与检查
+## 服务启动与检查
 ```bash
 systemctl start docker //启动docker
 systemctl status docker // 检查运行状态
@@ -19,15 +19,25 @@ docker pull 镜像名(e.g. nginx, tomcat)
 ```bash
 docker images //查看已下载的镜像
 ```
+## 删除
+```
+docker image rm [image]
+```
+
 # 容器
 ## 查看容器
 ```bash
 docker ps //查看当前运行的容器
 docker ps -a //查看所有容器
 ```
+
+## 启动容器
+```bash
+```
 ## 停止与删除
 ```bash
+
 docker stop 容器名(container name) 
 docker rm 容器名
 ```
-##
+
