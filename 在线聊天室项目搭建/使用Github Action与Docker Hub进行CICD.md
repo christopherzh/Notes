@@ -12,7 +12,7 @@
    1. Name: **DOCKER_HUB_USERNAME** ; Value: **Docker Hub的用户名**
    2. Name：**DOCKER_HUB_ACCESS_TOKEN** ; Value: **之前保存的Token**
 ## 使用Github Action并编写yml文件
-1. 点击Actions，选择自定义，将内容修改为以下内容
+1. 点击Actions，选择docker image，将内容修改为以下内容
 ```yml
 name: Docker Image CI
 
@@ -55,8 +55,8 @@ jobs:
 
 ## 在服务器上拉取构建好的镜像
 1. 确保Docker已经在服务器上安装并已启动
-2. 拉取镜像：docker pull命令，我的命令：**docker pull christopherzh/docker-test**
-3. 启动镜像：docker run命令，我的命令：**docker run -p 8000:8000 --name fastapi -d christopherzh/online-chat-room-backend**
+2. 拉取镜像：docker pull命令，我的命令：**docker pull christopherzh/online-chat-room-backend** and **docker pull christopherzh/online-chat-room-frontend**
+3. 启动镜像：docker run命令，我的命令：**docker run -p 8000:8000 --name fastapi -d christopherzh/online-chat-room-backend** and **docker run -p 80:80 --name nginx -d christopherzh/online-chat-room-frontend**
 ## 在服务器上运行watchtower
 watchtower简介：https://www.ioiox.com/archives/84.html
 
