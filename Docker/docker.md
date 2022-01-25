@@ -11,10 +11,13 @@ systemctl status docker // 检查运行状态
 system enable docker.service //设置为开机启动
 ```
 # 镜像
+## 设置加速源
+https://cloud.tencent.com/document/product/1207/45596
 ## 下载镜像
 ```bash
 docker pull 镜像名(e.g. nginx, tomcat)
 ```
+
 ## 查看
 ```bash
 docker images //查看已下载的镜像
@@ -40,4 +43,5 @@ docker ps -a //查看所有容器
 docker stop 容器名(container name) 
 docker rm 容器名
 ```
+
 

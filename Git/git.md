@@ -22,7 +22,11 @@ $ sudo apt-get install git
 7. 如果看到 Permission denied (publickey). 就说明失败；如果看到 Hi XXXX! You've successfully authenticated, but GitHub does not provide shell access
    
 ## 本地仓库关联远程仓库 
-
+1. git remote add origin xxxx
+2. git pull origin master
+如果遇到 *fatal: refusing to merge unrelated histories*，使用下面的命令来拉取
+git pull origin master --allow-unrelated-histories
+3. git push
 # 一些资源
 - [官方网站](https://www.git-scm.com/)
 - [廖雪峰的教程](https://www.liaoxuefeng.com/wiki/896043488029600) 
