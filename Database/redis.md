@@ -1,3 +1,4 @@
+# Redis介绍
 # NoSQL 技术
 NoSQL技术是一种基于内存的数据库，并且提供一定的持久化功能。
 
@@ -9,3 +10,7 @@ Redis 主要有两个应用场景：
 - 需要高速读/写的场合使用它快速读/写；
 ![使用 Redis 作为缓存的读取逻辑](image\v2-59e6bc0e759f911af90ef2ce04580fc8_720w.jpg)
 ![写操作的流程](image\v2-2a22f9f9a052e58f844cd93653f06daf_720w.jpg)
+
+# Redis原理
+# Redis使用
+##

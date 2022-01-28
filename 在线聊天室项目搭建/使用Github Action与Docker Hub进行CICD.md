@@ -1,6 +1,7 @@
 # 使用Github Action与Docker Hub进行CI/CD
 ## 建立Github仓库
 跟随网站指示建立即可
+## 在仓库根目录下创建Dockerfile
 ## 建立Docker Hub账户并获取Token
 1. 跟随网站指示建立账户
 2. 建立完成后在 Account Settings-Security-Access Tokens中选择New Access Token
@@ -53,14 +54,46 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/your-image-name:latest
 ```
 
-## 在服务器上拉取构建好的镜像
+## (选做)配置创建容器所需的环境变量文件
+因为我们的fastapi后端需要访问Redis等数据库，需要数据库的配置，但由于后端代码是开源的，直接将config文件上传到github有很大风险，故使用环境变量+后端启动时读取环境变量的方式来进行数据库的配置。
+
+如不需要访问数据库或不在意安全性问题的可以跳过该步骤。
+
+1. 在 bash shell运行目录下建立 *.redis_env*
+2. 内容为
+```
+REDIS_PWD=Redis登陆密码
+REDIS_USR=root
+REDIS_IP=xxx
+```
+## 在服务器上拉取构建好的镜像并启动
 1. 确保Docker已经在服务器上安装并已启动
-2. 拉取镜像：docker pull命令，我的命令：**docker pull christopherzh/online-chat-room-backend** and **docker pull christopherzh/online-chat-room-frontend**
-3. 启动镜像：docker run命令，我的命令：**docker run -p 8000:8000 --name fastapi -d christopherzh/online-chat-room-backend** and **docker run -p 80:80 --name nginx -d christopherzh/online-chat-room-frontend**
+2. 拉取镜像：docker pull命令，我的命令：
+```docker
+docker pull christopherzh/online-chat-room-backend
+docker pull christopherzh/online-chat-room-frontend
+```
+3. 启动镜像：docker run命令，我的命令：
+```docker
+docker run -p 8000:8000 --name fastapi -d --env-file .redis_env  christopherzh/online-chat-room-backend
+docker run -p 80:80 --name nginx -d christopherzh/online-chat-room-frontend
+docker run --name nginx  -d --net="host" christopherzh/online-chat-room-frontend
+```
 ## 在服务器上运行watchtower
-watchtower简介：https://www.ioiox.com/archives/84.html
+### watchtower简介
+https://www.ioiox.com/archives/84.html
 
-docker run -d --name watchtower -e REPO_USER=xxxx -e REPO_PASS=xxxxx --restart always -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --cleanup --interval 300 //设置watchtower
+### 配置环境变量文件
+1. 在bash shell当前所在目录建立 *.watchtower_env*
+2. 内容为
+```txt
+REPO_USER=dockerhub账户名称
+REPO_PASS=dockerhub账户密码
+```
+### 命令
+```docker
+docker run -d --name watchtower --env-file .watchtower_env   --restart always -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --cleanup --interval 90 nginx fastapi
 
-docker run --rm -e REPO_USER=xxxx -e REPO_PASS=xxxxx  -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --cleanup --run-once //只执行一次，随后就删除自己
-## 享受CI/CD带来的便捷吧
+docker run --rm --env-file .watchtower_env  -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --cleanup --run-once //只执行一次，随后就删除自己
+```
+## 提交代码，并享受CI/CD带来的便捷吧

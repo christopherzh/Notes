@@ -74,3 +74,28 @@ systemctl start docker
 systemctl enable docker
 
 ## 启动相关容器
+
+# Redis
+仍然使用docker部署，方便维护
+## 配置redis.conf配置文件
+修改redis.conf配置文件：
+主要配置的如下：
+```
+ bind 127.0.0.1     #注释掉这部分，使redis可以外部访问
+ daemonize no   #用守护线程的方式启动
+ requirepass 你的密码   #给redis设置密码
+ appendonly yes    #redis持久化,默认是no
+ tcp-keepalive 300    #防止出现远程主机强迫关闭了一个现有的连接的错误 默认是300
+```
+
+## 创建本地与docker映射的目录
+可以自定义，因为我的docker的一些配置文件都是存放在/data目录下面的，所以我依然在/data目录下创建一个redis目录，这样是为了方便后期管理
+```
+mkdir /data/redis
+mkdir /data/redis/data
+```
+把配置文件拷贝到刚才创建好的文件里，即 */data/redis*
+## 启动docker redis
+```
+docker run -p 6379:6379 --name redis -v /data/redis/redis.conf:/etc/redis/redis.conf  -v /data/redis/data:/data -d redis redis-server /etc/redis/redis.conf --appendonly yes
+```
