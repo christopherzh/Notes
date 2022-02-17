@@ -71,13 +71,10 @@ REDIS_IP=xxx
 2. 拉取镜像：docker pull命令，我的命令：
 ```docker
 docker pull christopherzh/online-chat-room-backend
-docker pull christopherzh/online-chat-room-frontend
 ```
 3. 启动镜像：docker run命令，我的命令：
 ```docker
-docker run -p 8000:8000 --name fastapi -d --env-file .redis_env  christopherzh/online-chat-room-backend
-docker run -p 80:80 --name nginx -d christopherzh/online-chat-room-frontend
-docker run --name nginx  -d --net="host" christopherzh/online-chat-room-frontend
+docker run -p 8000:8000 -p 50051:50051 --name fastapi -d --env-file .redis_env  christopherzh/online-chat-room-backend:latest
 ```
 ## 在服务器上运行watchtower
 ### watchtower简介
