@@ -1,3 +1,26 @@
+// 客户端向服务端请求登录
+// 发送格式
 {
-    
+    "seq": "1565336219141-266129",
+    "cmd": "login",
+    "data": {
+        "userId": "马远",
+        "appId": 101
+    }
+}
+// 响应格式
+{
+    "seq": "1565336219141-266129",
+    "cmd": "login",
+    "response": {
+        "code": 200,
+        "codeMsg": "Success",
+        "data": null
+    }
+}
+
+{
+    "seq": "2324",
+    "cmd": "heartbeat",
+    "data": {}
 }
