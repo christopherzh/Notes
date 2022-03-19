@@ -111,3 +111,43 @@ public:
 private:
     vector<int> fa;
 };
+
+//前缀树Trie
+class Trie {
+public:
+    Trie():next(26),isEnd(false) {}
+    void insert(string word) {
+        Trie* node=this;
+        for(char c:word){
+            if(!node->next[c-'a']){
+                node->next[c-'a']=new Trie;
+            }
+            node=node->next[c-'a'];
+        }
+        node->isEnd=true;
+        
+    }
+    bool search(string word) {
+        Trie* node=this;
+        for(char c:word){
+            if(!node->next[c-'a']){
+                return false;
+            }
+            node=node->next[c-'a'];
+        }
+        return node->isEnd;
+    }
+    bool startsWith(string prefix) {
+        Trie* node=this;
+        for(char c:prefix){
+            if(!node->next[c-'a']){
+                return false;
+            }
+            node=node->next[c-'a'];
+        }
+        return true;
+    }
+private:
+    vector<Trie*> next;
+    bool isEnd;
+};
