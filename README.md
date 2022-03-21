@@ -4,7 +4,7 @@
 
 🙈[Github](https://github.com/christopherzh)
 
-🙉[个人网站](https://tonialove.me)
+🙉[个人网站](https://beyonduniverse.club)
 
-🙊[笔记网站](https://notes.tonialove.me)
+🙊[笔记网站](https://notes.beyonduniverse.club)
 
