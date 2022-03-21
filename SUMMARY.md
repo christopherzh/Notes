@@ -11,10 +11,11 @@
 * [复习笔记](OS/复习笔记.md)
 
 ## Linux
-* [Linux Kernel Development](Linux/linux_kernel_development.md)
+* [Linux内核设计与实现](Linux/linux_kernel_development.md)
 
 ## Git
 * [Git](Git/git.md)
 
+## 设计模式
+* [抽象工厂模式](设计模式/抽象工厂模式/抽象工厂模式.md)
 ## Others
-* [Freemind](Philosophies/freemind.md)
