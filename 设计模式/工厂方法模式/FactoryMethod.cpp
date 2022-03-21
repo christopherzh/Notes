@@ -34,7 +34,7 @@ class Creator{
 class ConcreteCreatorA:public Creator{
     public:
         Product* CreateProduct() const override{
-            return new ConcreteProductA(); 
+            return new ConcreteProductA; 
         };
 };
 class ConcreteCreatorB:public Creator{
