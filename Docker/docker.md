@@ -44,4 +44,15 @@ docker stop 容器名(container name)
 docker rm 容器名
 ```
 
+# 容器内配置
+## 安装vim
+cat >/etc/apt/sources.list <<EOF
+deb http://deb.debian.org/debian buster main
+deb http://security.debian.org/debian-security buster/updates main
+deb http://deb.debian.org/debian buster-updates main
+EOF
 
+执行成功后，再运行下面的命令即可
+
+apt-get update
+apt-get install -y vim
