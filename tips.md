@@ -105,8 +105,9 @@ b. 否则u将被转换为T类型右值。
 # Linux
 ## Shell
 ### `!`的使用
-https://blog.csdn.net/donggua_fu/article/details/77387748
-> `!`放在变量前面，表示间接访问，相当于C里面访问指针指向的值一样。
+https://www.cnblogs.com/yy3b2007com/p/11267237.html
+https://blog.csdn.net/donggua_fu/article/details/77387748 (好像不对)
+
 ## 链接
 [有关链接的博客讲解](http://c.biancheng.net/linux/ln.html)
 - 硬链接： 与普通文件没什么不同，inode都指向同一个文件在硬盘中的区块
