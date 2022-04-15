@@ -8,6 +8,12 @@ $ sudo apt-get install git
 
 # 使用Git
 ## 基本语法
+
+## tips
+revert和reset的区别:
+
+revert是放弃指定提交的修改，但是会生成一次新的提交，需要填写提交注释，以前的历史记录都在，而reset是指将HEAD指针指到指定提交，历史记录中不会出现放弃的提交记录。
+
 # 与Github建立连接
 
 ## 使用SSH连接到Github
