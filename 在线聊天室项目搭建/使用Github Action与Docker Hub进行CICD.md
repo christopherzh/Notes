@@ -74,7 +74,8 @@ docker pull christopherzh/online-chat-room-backend
 ```
 3. 启动镜像：docker run命令，我的命令：
 ```docker
-docker run -p 8000:8000 -p 50051:50051 --name fastapi -d --env-file .redis_env  christopherzh/online-chat-room-backend:latest
+docker run -p 8000:8000 -p 50051:50051 -p 8001:8001--name fastapi -d --env-file .redis_env  christopherzh/online-chat-room-backend:latest
+
 ```
 ## 在服务器上运行watchtower
 ### watchtower简介
