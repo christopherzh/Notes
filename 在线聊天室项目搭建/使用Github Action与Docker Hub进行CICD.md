@@ -92,6 +92,6 @@ REPO_PASS=dockerhub账户密码
 ```docker
 docker run -d --name watchtower --env-file .watchtower_env   --restart always -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --cleanup --interval 90 nginx fastapi
 
-docker run --rm --env-file .watchtower_env  -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --cleanup --run-once //只执行一次，随后就删除自己
+docker run --rm --env-file .watchtower_env  -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --cleanup --run-once nginx //只执行一次，随后就删除自己，watchtower 将在名为“nginx”的容器上执行一次尝试升级。程序将在前台运行，执行更新后，容器将退出并删除（因为这里加入了 --rm参数）
 ```
 ## 提交代码，并享受CI/CD带来的便捷吧
