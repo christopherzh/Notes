@@ -151,3 +151,19 @@ private:
     vector<Trie*> next;
     bool isEnd;
 };
+
+//单调栈: https://zhuanlan.zhihu.com/p/346536592 , https://juejin.cn/post/7019648593694818334#heading-7
+vector<int> monoStack(vector<int>& nums){ //维护一个单调递减栈，例题：https://www.luogu.com.cn/problem/P5788
+    int n=nums.size();
+    vector<int> ans(n+1);
+    stack<int> S; // 单调栈
+    for(int i=1;i<=n;i++){
+        //当栈顶元素小于当前遍历元素时，即已找到栈顶元素右侧第一个比它大的值的时候，不断弹出栈顶元素并记录位置
+        while(!S.empty()&&nums[S.top()]<nums[i]){ 
+            ans[S.top()]=i;
+            S.pop();
+        }
+        S.push(i);//当栈顶元素大于等于当前遍历元素时，单调栈的性质不变，压入栈顶即可
+    }
+    return ans;
+}
