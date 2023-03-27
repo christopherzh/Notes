@@ -48,6 +48,7 @@
         "optional": "cpp",
         "string": "cpp",
         "string_view": "cpp",
-        "map": "cpp"
+        "map": "cpp",
+        "forward_list": "cpp"
     }
 }
