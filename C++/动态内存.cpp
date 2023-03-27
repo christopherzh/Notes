@@ -23,8 +23,19 @@ void allocatorExample(int n)
     }
     alloc.deallocate(p, n); // 释放内存
 }
+
+void shared_ptrExample(){
+    shared_ptr<string> p1(make_shared<string>("asd"));
+    cout<<p1.use_count()<<endl;
+    shared_ptr<string> p2(p1);
+    cout<<p2.use_count()<<endl;
+    shared_ptr<string> p3;
+    cout<<p3.use_count()<<endl;
+}
+
 int main()
 {
-    allocatorExample(5);
+    // allocatorExample(5);
+    shared_ptrExample();
     return 0;
 }
