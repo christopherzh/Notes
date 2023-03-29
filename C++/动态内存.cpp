@@ -58,11 +58,41 @@ void unique_ptrExample()
     up2.reset(up3.release());
     cout << *up2 << endl;
 }
+
+class MyNewAndDelete
+{
+public:
+    void *operator new(size_t size);
+    void operator delete(void *p) noexcept;
+};
+void *MyNewAndDelete::operator new(size_t size)
+{
+    if (void *p = malloc(size))
+    {
+        cout << "成啦，兄弟！" << endl;
+        return p;
+    }
+    else
+    {
+        throw bad_alloc();
+    }
+};
+
+void MyNewAndDelete::operator delete(void *p) noexcept
+{
+    cout << "没啦，兄弟！" << endl;
+    free(p);
+};
 int main()
 {
     // allocatorExample(5);
     // shared_ptrExample();
     // weak_ptrExample();
     unique_ptrExample();
+
+    // 测试自定义new delete
+    auto *p = new MyNewAndDelete();
+    delete p;
+
     return 0;
 }
