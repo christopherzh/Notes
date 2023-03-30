@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include <algorithm>
 #include <map>
-using std::cout, std::endl, std::string;
+#include <utility>
+using std::cout, std::endl, std::string, std::pair, std::make_pair;
 // unordered_multimap示例 http://c.biancheng.net/view/7248.html
 void unorderedMultimapExample()
 {
@@ -23,7 +24,23 @@ void unorderedMultimapExample()
         cout << it->first << ":" << it->second << endl;
     }
 }
+void multimapExample()
+{
+    // 创建空容器
+    std::multimap<string, string> uoMp;
+    // 向空容器中连续添加 5 个键值对
+    uoMp.emplace("Python教程", "http://c.biancheng.net/python/");
+    uoMp.emplace("STL教程", "http://c.biancheng.net/stl/");
+    uoMp.emplace("Java教程", "http://c.biancheng.net/java/");
+    uoMp.emplace("C教程", "http://c.biancheng.net");
+    uoMp.emplace("C教程", "http://c.biancheng.net/c/"); 
 
+    
+    for (auto it = uoMp.begin(); it != uoMp.end(); it++)
+    {
+        cout << it->first << ":" << it->second << endl;
+    }
+}
 void mapExample()
 {
     std::map<string, int> m{{"a", 0}, {"b", 1}};
@@ -45,10 +62,20 @@ void mapExample()
         cout << e.what();
     }
 }
+
+pair<string, int> fun(int i)
+{
+    if (i == 1)
+        return {"a", 1};
+    if (i == 2)
+        return pair<string, int>{"b", 2};
+    if (i == 3)
+        return make_pair("c", 3);
+}
 int main()
 {
-    unorderedMultimapExample();
-    mapExample();
+    // unorderedMultimapExample();
+    // mapExample();
+    multimapExample();
     return 0;
 }
-
