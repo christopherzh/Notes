@@ -99,3 +99,69 @@ mkdir /data/redis/data
 ```
 docker run -p 6379:6379 --name redis -v /data/redis/redis.conf:/etc/redis/redis.conf  -v /data/redis/data:/data -d redis redis-server /etc/redis/redis.conf --appendonly yes
 ```
+
+# Nginx
+## 配置文件
+```
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''  close;
+}
+
+server {
+    listen       80;
+    server_name  beyonduniverse.club;
+
+    location / {
+        root   /usr/share/nginx/blog;
+        index  index.html  index.htm;
+        try_files  $uri $uri/ /index.html;
+    }
+
+}
+
+
+server {
+    listen       80;
+    server_name  chat.beyonduniverse.club;
+
+    location / {
+        root   /usr/share/nginx/chat;
+        index  index.html;
+        try_files $uri /index.html;
+    }
+
+    location /ws {
+    proxy_pass http://loadbalance_ws;
+    proxy_read_timeout 600;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+    }
+
+    location /user {
+    proxy_pass http://loadbalance;
+    proxy_read_timeout 600;
+    proxy_http_version 1.1;
+    }
+
+
+
+
+}
+
+upstream  loadbalance_ws {  
+    server  120.77.19.79:8001   weight=1;
+    server  101.43.149.3:8001   weight=1;  
+    }
+
+upstream  loadbalance {  
+    server  120.77.19.79:8000   weight=1;
+    server  101.43.149.3:8000   weight=1; 
+}
+```
+## 启动docker nginx
+```
+docker run --name nginx  -d --net="host"  -v /app/blog:/usr/share/nginx/blog -v /app/chat:/usr/share/nginx/chat -v /root/nginx/default.conf:/etc/nginx/conf.d/default.conf nginx:latest
+
+```
